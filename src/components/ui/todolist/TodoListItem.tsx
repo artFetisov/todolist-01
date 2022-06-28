@@ -1,11 +1,19 @@
 import React, {FC} from "react";
 import {ITodoItem} from "./todolist.interface";
 import {Input} from "../form-elements/Input";
+import {Button} from "../form-elements/Button";
 
-export const TodoListItem: FC<{ task: ITodoItem }> = ({task: {title, isDone}}) => {
+interface ITodoItemProps {
+    task: ITodoItem
+    removeHandler: (id: number) => void
+}
+
+
+export const TodoListItem: FC<ITodoItemProps> = ({task, removeHandler}) => {
 
     return <li>
-        <Input type="checkbox" checked={isDone}/>
-        <span>{title}</span>
+        <Input type="checkbox" checked={task.isDone}/>
+        <span>{task.title}</span>
+        <Button children='X' onClick={() => removeHandler(task.id)}/>
     </li>
 }
