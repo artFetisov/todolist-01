@@ -6,6 +6,12 @@ import {v1} from "uuid";
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 
+const filteredTasksHandler = (tasks: ITodoItem[], filter: FilterValuesType): ITodoItem[] => {
+    if (filter === 'completed') return tasks.filter(t => t.isDone)
+    else if (filter === 'active') return tasks.filter(t => !t.isDone)
+    else return tasks
+}
+
 export const Home: FC = () => {
     const [tasks, setTasks] = useState<ITodoItem[]>(tasks1)
     const [filter, setFilter] = useState<FilterValuesType>('all')
@@ -28,10 +34,7 @@ export const Home: FC = () => {
         setTasks([newTask, ...tasks])
     }
 
-    let filteredTasks = tasks
-
-    if (filter === 'completed') filteredTasks = tasks.filter(t => t.isDone)
-    if (filter === 'active') filteredTasks = tasks.filter(t => !t.isDone)
+    let filteredTasks = filteredTasksHandler(tasks, filter)
 
     return <div className="home">
         <TodoList

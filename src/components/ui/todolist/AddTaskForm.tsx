@@ -18,7 +18,6 @@ export const AddTaskForm: FC<IAddTaskForm> = ({addTask}) => {
             addTask(newTaskTitle)
             setNewTaskTitle('')
         }
-
     }
 
     const addTaskHandler = () => {
