@@ -20,8 +20,8 @@ export const Home: FC = () => {
 
     let filteredTasks = tasks
 
-    if (filter === 'completed') filteredTasks = tasks.filter(t => !t.isDone)
-    if (filter === 'active') filteredTasks = tasks.filter(t => t.isDone )
+    if (filter === 'completed') filteredTasks = tasks.filter(t => t.isDone)
+    if (filter === 'active') filteredTasks = tasks.filter(t => !t.isDone)
 
     return <div className="home">
         <TodoList
