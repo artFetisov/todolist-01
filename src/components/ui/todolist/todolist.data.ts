@@ -10,4 +10,5 @@ export const tasks1: ITodoItem[] = [
     {id: v1(), title: 'SASS', isDone: true},
 ]
 
+export const btnTitles: string[] = ['All', 'Active', 'Completed',]
 

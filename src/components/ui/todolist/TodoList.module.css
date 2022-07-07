@@ -1,0 +1,11 @@
+.error {
+    color: red;
+}
+
+.btnActive {
+    background-color: darkblue;
+}
+
+.isDone {
+    opacity: 0.6;
+}

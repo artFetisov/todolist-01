@@ -36,6 +36,12 @@ export const Home: FC = () => {
         }
     }
 
+    const changeTask = (taskId: string, isDone: boolean) => {
+        const task = tasks.find(t => t.id === taskId)
+        if (task) task.isDone = isDone
+        setTasks([...tasks])
+    }
+
     let filteredTasks = filteredTasksHandler(tasks, filter)
 
     return <div className="home">
@@ -45,6 +51,8 @@ export const Home: FC = () => {
             removeHandler={removeHandler}
             changeFilter={changeFilterHandler}
             addTask={addTask}
+            changeTask={changeTask}
+            filter={filter}
         />
     </div>
 }
