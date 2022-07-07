@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 import {Heading} from "../heading/Heading";
-import {ITodoItem} from "./todolist.interface";
+import {ITodoItem} from "./todolist.types";
 import {TodoListItem} from "./TodoListItem";
 import {Button} from "../form-elements/Button";
 import {FilterValuesType} from "../../pages/home/Home";
@@ -26,6 +26,7 @@ export const TodoList: FC<ITodoListProps> = ({title, tasks, removeHandler, chang
     const onCompletedClickhandler = () => {
         changeFilter('completed')
     }
+
 
     return <div className="App">
         <div>

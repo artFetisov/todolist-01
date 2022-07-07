@@ -1,7 +1,7 @@
 import React, {FC, useState} from "react";
 import {TodoList} from "../../ui/todolist/TodoList";
 import {tasks1} from "../../ui/todolist/todolist.data";
-import {ITodoItem} from "../../ui/todolist/todolist.interface";
+import {ITodoItem} from "../../ui/todolist/todolist.types";
 import {v1} from "uuid";
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
@@ -26,12 +26,14 @@ export const Home: FC = () => {
     }
 
     const addTask = (title: string) => {
-        const newTask = {
-            id: v1(),
-            title,
-            isDone: false
+        if (title.trim().length > 0) {
+            const newTask = {
+                id: v1(),
+                title,
+                isDone: false
+            }
+            setTasks([newTask, ...tasks])
         }
-        setTasks([newTask, ...tasks])
     }
 
     let filteredTasks = filteredTasksHandler(tasks, filter)

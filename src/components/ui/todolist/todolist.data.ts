@@ -1,4 +1,4 @@
-import {ITodoItem} from "./todolist.interface";
+import {ITodoItem} from "./todolist.types";
 import {v1} from 'uuid'
 
 

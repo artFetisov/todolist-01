@@ -7,5 +7,6 @@ export interface IInput extends TypeInputPropsField {
 
 type TypeButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
 
-export interface IButton extends TypeButtonProps {}
+export interface IButton extends TypeButtonProps {
+}
 
