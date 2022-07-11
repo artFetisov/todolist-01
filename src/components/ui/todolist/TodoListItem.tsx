@@ -6,18 +6,19 @@ import styles from './TodoList.module.css'
 
 interface ITodoItemProps {
     task: ITodoItem
-    removeHandler: (id: string) => void
-    changeTask: (taskId: string, isDone: boolean) => void
+    removeHandler: (id: string, todoListId: string) => void
+    changeTask: (taskId: string, isDone: boolean, todoListId: string) => void
+    todoListId: string
 }
 
 
-export const TodoListItem: FC<ITodoItemProps> = ({task, removeHandler, changeTask}) => {
-    const onRemoveHandler = () => {
-        removeHandler(task.id)
+export const TodoListItem: FC<ITodoItemProps> = ({task, removeHandler, changeTask, todoListId}) => {
+    function onRemoveHandler() {
+        removeHandler(task.id, todoListId)
     }
 
-    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        changeTask(task.id, e.currentTarget.checked)
+    function onChangeHandler(e: ChangeEvent<HTMLInputElement>) {
+        changeTask(task.id, e.currentTarget.checked, todoListId)
     }
 
     return <li className={task.isDone ? styles.isDone : ''}>

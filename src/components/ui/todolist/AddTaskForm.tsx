@@ -4,41 +4,42 @@ import {Button} from "../form-elements/Button";
 import styles from './TodoList.module.css'
 
 interface IAddTaskForm {
-    addTask: (title: string) => void
+    addTask: (title: string, todoListId: string) => void
+    todoListId: string
 }
 
-export const AddTaskForm: FC<IAddTaskForm> = ({addTask}) => {
+export const AddTaskForm: FC<IAddTaskForm> = ({addTask, todoListId}) => {
     const [newTaskTitle, setNewTaskTitle] = useState<string>('')
     const [error, setError] = useState<string>('')
     const isError = error.length > 0
 
-    const onChangeTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    function onChangeTitle(e: ChangeEvent<HTMLInputElement>) {
         if (error) setError('')
         setNewTaskTitle(e.currentTarget.value)
     }
 
-    const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    function onKeyPressHandler(e: KeyboardEvent<HTMLInputElement>) {
         if (newTaskTitle.trim() === '') {
             setError('Title is required')
             return
         }
         if (e.key === 'Enter') {
-            addTask(newTaskTitle.trim())
+            addTask(newTaskTitle.trim(), todoListId)
             setNewTaskTitle('')
         }
     }
 
-    const addTaskHandler = () => {
+    function addTaskHandler() {
         if (newTaskTitle.trim() === '') {
             setError('Title is required')
             return
         }
-        addTask(newTaskTitle.trim())
+        addTask(newTaskTitle.trim(), todoListId)
         setNewTaskTitle('')
     }
 
     return <div>
-        <Input onKeyPress={onKeyPressHandler} type='text' value={newTaskTitle} onChange={onChangeTitle}
+        <Input onKeyDown={onKeyPressHandler} type='text' value={newTaskTitle} onChange={onChangeTitle}
                placeholder='Enter a new task...'/>
         <Button onClick={addTaskHandler} children='+' disabled={isError}></Button>
         {error && <div className={styles.error}>{error}</div>}
