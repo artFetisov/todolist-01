@@ -1,5 +1,5 @@
 import React, {FC} from "react";
 
-export const Heading: FC<{ title: string }> = ({title}) => {
-    return <h3>{title}</h3>
+export const Heading: FC<{ title: string, onDoubleClick?: () => void }> = ({title, onDoubleClick}) => {
+    return <h3 onDoubleClick={onDoubleClick}>{title}</h3>
 }

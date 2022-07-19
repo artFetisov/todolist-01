@@ -3,12 +3,12 @@ import {Input} from "../form-elements/Input";
 import {Button} from "../form-elements/Button";
 import styles from './TodoList.module.css'
 
-interface IAddTaskForm {
-    addTask: (title: string, todoListId: string) => void
-    todoListId: string
+interface IAddItemFormProps {
+    addItem: (title: string) => void
+    placeholder: string
 }
 
-export const AddTaskForm: FC<IAddTaskForm> = ({addTask, todoListId}) => {
+export const AddItemForm: FC<IAddItemFormProps> = ({addItem, placeholder}) => {
     const [newTaskTitle, setNewTaskTitle] = useState<string>('')
     const [error, setError] = useState<string>('')
     const isError = error.length > 0
@@ -24,7 +24,7 @@ export const AddTaskForm: FC<IAddTaskForm> = ({addTask, todoListId}) => {
             return
         }
         if (e.key === 'Enter') {
-            addTask(newTaskTitle.trim(), todoListId)
+            addItem(newTaskTitle.trim())
             setNewTaskTitle('')
         }
     }
@@ -34,13 +34,13 @@ export const AddTaskForm: FC<IAddTaskForm> = ({addTask, todoListId}) => {
             setError('Title is required')
             return
         }
-        addTask(newTaskTitle.trim(), todoListId)
+        addItem(newTaskTitle.trim())
         setNewTaskTitle('')
     }
 
     return <div>
         <Input onKeyDown={onKeyPressHandler} type='text' value={newTaskTitle} onChange={onChangeTitle}
-               placeholder='Enter a new task...'/>
+               placeholder={placeholder}/>
         <Button onClick={addTaskHandler} children='+' disabled={isError}></Button>
         {error && <div className={styles.error}>{error}</div>}
     </div>

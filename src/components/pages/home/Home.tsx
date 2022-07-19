@@ -3,11 +3,23 @@ import {TodoList} from "../../ui/todolist/TodoList";
 import {allTasks, todoListsData} from "../../ui/todolist/todolist.data";
 import {FilterValuesType, ITasks, ITodoItem, ITodoList} from "../../ui/todolist/todolist.types";
 import {v1} from "uuid";
+import {AddItemForm} from "../../ui/todolist/AddItemForm";
 
 
 export const Home: FC = () => {
     const [todoLists, setTodoLists] = useState<ITodoList[]>(todoListsData)
     const [tasks, setTasks] = useState<ITasks>(allTasks)
+
+    function addTodoList(title: string) {
+        const newTodoList: ITodoList = {
+            id: v1(),
+            title,
+            filter: 'all'
+        }
+        setTodoLists([...todoLists, newTodoList])
+        // tasks[newTodoList.id] = []
+        setTasks({...tasks, [newTodoList.id]: []})
+    }
 
 
     function removeHandler(id: string, todoListId: string) {
@@ -48,6 +60,22 @@ export const Home: FC = () => {
         }
     }
 
+    function changeTaskTitle(todoListId: string, taskId: string, newTitle: string) {
+        const task = tasks[todoListId].find(t => t.id === taskId)
+        if (task) {
+            task.title = newTitle
+            setTasks({...tasks})
+        }
+    }
+
+    function changeListTitle(todoListId: string, newTitle: string) {
+        const todoList = todoLists.find(todo => todo.id === todoListId)
+        if (todoList) {
+            todoList.title = newTitle
+        }
+        setTodoLists([...todoLists])
+    }
+
     function remodeTodoList(todoListId: string) {
         const filteredTodoLists = todoLists.filter(list => list.id !== todoListId)
         setTodoLists([...filteredTodoLists])
@@ -61,23 +89,29 @@ export const Home: FC = () => {
         else return tasks
     }
 
-    return <div className="home">
-        {todoLists.map(({id, title, filter}) => {
-                const filteredTasks = filteredTasksHandler(tasks[id], filter)
+    return <>
+        <AddItemForm placeholder={'Add a new list'} addItem={addTodoList}/>
+        <div className="home">
+            {todoLists.map(({id, title, filter}) => {
+                    const filteredTasks = filteredTasksHandler(tasks[id], filter)
 
-                return <TodoList
-                    key={id + title}
-                    id={id}
-                    title={title}
-                    tasks={filteredTasks}
-                    removeHandler={removeHandler}
-                    changeFilter={changeFilterHandler}
-                    addTask={addTask}
-                    changeTask={changeTask}
-                    filter={filter}
-                    removeTodoList={remodeTodoList}
-                />
-            }
-        )}
-    </div>
+                    return <TodoList
+                        key={id + title}
+                        id={id}
+                        title={title}
+                        tasks={filteredTasks}
+                        removeHandler={removeHandler}
+                        changeFilter={changeFilterHandler}
+                        addTask={addTask}
+                        changeTask={changeTask}
+                        filter={filter}
+                        removeTodoList={remodeTodoList}
+                        changeTaskTitle={changeTaskTitle}
+                        changeListTitle={changeListTitle}
+                    />
+                }
+            )}
+        </div>
+    </>
+
 }
