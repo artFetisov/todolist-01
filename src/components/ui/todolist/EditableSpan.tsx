@@ -1,6 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, FC, useState} from "react";
-import {Input} from "../form-elements/Input";
-import {Heading} from "../heading/Heading";
+import {TextField, Typography} from "@mui/material";
 
 interface IEditableSpanProps {
     title: string
@@ -33,22 +32,26 @@ export const EditableSpan: FC<IEditableSpanProps> = ({title, changeTitleHandler,
     }
 
     if (isHeading) {
-        return editMode ? <Input
+        return editMode ? <TextField
                 autoFocus
                 onKeyDown={onKeyPressHandler}
                 onBlur={changeTitle}
                 onChange={onChangeTitleHandler}
                 value={newTitle}
+                variant="standard"
             />
-            : <Heading title={title} onDoubleClick={setEditModeHandler}></Heading>
+            : <Typography variant="h4" gutterBottom component="span" onDoubleClick={setEditModeHandler}>
+                {title}
+            </Typography>
     }
 
-    return editMode ? <Input
+    return editMode ? <TextField
             autoFocus
             onKeyDown={onKeyPressHandler}
             onBlur={changeTitle}
             onChange={onChangeTitleHandler}
             value={newTitle}
+            variant="standard"
         />
         : <span onDoubleClick={setEditModeHandler}>{title}</span>
 }

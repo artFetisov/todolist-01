@@ -1,11 +1,9 @@
 import React, {ChangeEvent, KeyboardEvent, FC, useState} from "react";
-import {Input} from "../form-elements/Input";
-import {Button} from "../form-elements/Button";
-import styles from './TodoList.module.css'
+import {Button, TextField} from "@mui/material";
 
 interface IAddItemFormProps {
     addItem: (title: string) => void
-    placeholder: string
+    placeholder?: string
 }
 
 export const AddItemForm: FC<IAddItemFormProps> = ({addItem, placeholder}) => {
@@ -38,10 +36,28 @@ export const AddItemForm: FC<IAddItemFormProps> = ({addItem, placeholder}) => {
         setNewTaskTitle('')
     }
 
-    return <div>
-        <Input onKeyDown={onKeyPressHandler} type='text' value={newTaskTitle} onChange={onChangeTitle}
-               placeholder={placeholder}/>
-        <Button onClick={addTaskHandler} children='+' disabled={isError}></Button>
-        {error && <div className={styles.error}>{error}</div>}
+    return <div style={{margin: '30px', display: 'flex', alignItems: 'center'}}>
+        <TextField
+            error={isError}
+            id="outlined-basic"
+            label={placeholder}
+            variant="outlined"
+            onKeyDown={onKeyPressHandler}
+            value={newTaskTitle}
+            onChange={onChangeTitle}
+            helperText={error ? "Title is required" : ""}
+            size={'small'}
+            color={'success'}
+            style={{marginRight: '10px'}}
+        />
+        <Button
+            variant="contained"
+            color="success"
+            onClick={addTaskHandler}
+            disabled={isError}
+            size={"medium"}
+        >
+            Add
+        </Button>
     </div>
 }

@@ -1,8 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
 .home {
-  padding: 30px;
-  display: flex;
+    padding: 30px;
+    display: flex;
 }
 
 .home > div {
-  margin-right: 50px;
+    margin-right: 50px;
 }
+
+li {
+    list-style: none;
+
+}
+
+

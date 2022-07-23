@@ -1,9 +1,9 @@
 import React, {ChangeEvent, FC} from "react";
 import {ITodoItem} from "./todolist.types";
-import {Input} from "../form-elements/Input";
-import {Button} from "../form-elements/Button";
 import styles from './TodoList.module.css'
 import {EditableSpan} from "./EditableSpan";
+import { Checkbox, IconButton} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ITodoItemProps {
     task: ITodoItem
@@ -13,8 +13,8 @@ interface ITodoItemProps {
     changeTaskTitle: (todoListId: string, taskId: string, newTitle: string) => void
 }
 
-
 export const TodoListItem: FC<ITodoItemProps> = ({task, removeHandler, changeTask, todoListId, changeTaskTitle}) => {
+
     function onRemoveHandler() {
         removeHandler(task.id, todoListId)
     }
@@ -28,8 +28,10 @@ export const TodoListItem: FC<ITodoItemProps> = ({task, removeHandler, changeTas
     }
 
     return <li className={task.isDone ? styles.isDone : ''}>
-        <Input type="checkbox" checked={task.isDone} onChange={onChangeHandler}/>
+        <Checkbox checked={task.isDone} onChange={onChangeHandler} size={"small"}/>
         <EditableSpan title={task.title} changeTitleHandler={changeTaskTitleHandler}/>
-        <Button children='X' onClick={onRemoveHandler}/>
+        <IconButton onClick={onRemoveHandler} color={"error"} style={{marginLeft: 'auto'}}>
+            <DeleteIcon/>
+        </IconButton>
     </li>
 }

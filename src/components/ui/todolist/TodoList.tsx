@@ -1,12 +1,12 @@
 import React, {FC, MouseEvent} from "react";
 import {ITodoItem} from "./todolist.types";
 import {TodoListItem} from "./TodoListItem";
-import {Button} from "../form-elements/Button";
 import {FilterValuesType} from './todolist.types'
 import {AddItemForm} from "./AddItemForm";
 import {btnTitles} from "./todolist.data";
 import styles from './TodoList.module.css'
 import {EditableSpan} from "./EditableSpan";
+import {Button, Card, Typography} from "@mui/material";
 
 interface ITodoListProps {
     id: string
@@ -53,14 +53,16 @@ export const TodoList: FC<ITodoListProps> = (
         changeListTitle(id, title)
     }
 
-    return <div className="App">
-        <div>
+    return <div style={{marginTop: '50px'}}>
+        <div style={{display: 'flex', alignItems: 'start', justifyContent: 'space-between'}}>
             <EditableSpan title={title} changeTitleHandler={changeListTitleHandler} isHeading/>
-            <Button onClick={onRemoveTodoList}>Delete List</Button>
-            <AddItemForm
-                addItem={addItem}
-                placeholder={'Add a new task'}
-            />
+            <Button onClick={onRemoveTodoList} color={'error'} variant="contained">Delete list</Button>
+        </div>
+        <AddItemForm
+            addItem={addItem}
+            placeholder={'Add new task'}
+        />
+        <Card>
             <ul>
                 {tasks.length > 0 ? tasks.map(task => <TodoListItem
                         todoListId={id}
@@ -70,18 +72,21 @@ export const TodoList: FC<ITodoListProps> = (
                         changeTask={changeTask}
                         changeTaskTitle={changeTaskTitle}
                     />
-                ) : <div><b>Tasks not found</b></div>}
+                ) : <Typography variant="h6">Tasks not found</Typography>}
             </ul>
-            <div>
-                {btnTitles.map(title => <Button
-                        onClick={onSetFilter}
-                        value={title.toLowerCase()}
-                        children={title}
-                        className={title.toLowerCase() === filter ? styles.btnActive : ''}
-                        key={title}
-                    />
-                )}
-            </div>
+
+        </Card>
+        <div style={{display: 'flex', justifyContent: 'space-around', marginTop: '20px'}}>
+            {btnTitles.map(title => <Button
+                    onClick={onSetFilter}
+                    value={title.toLowerCase()}
+                    className={title.toLowerCase() === filter ? styles.btnActive : ''}
+                    key={title}
+                    variant={title.toLowerCase() === filter ? 'contained' : 'outlined'}
+                >
+                    {title}
+                </Button>
+            )}
         </div>
     </div>
 }

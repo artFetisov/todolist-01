@@ -4,6 +4,8 @@ import {allTasks, todoListsData} from "../../ui/todolist/todolist.data";
 import {FilterValuesType, ITasks, ITodoItem, ITodoList} from "../../ui/todolist/todolist.types";
 import {v1} from "uuid";
 import {AddItemForm} from "../../ui/todolist/AddItemForm";
+import {Layout} from "../../../layout/Layout";
+import {Box, Grid} from "@mui/material";
 
 
 export const Home: FC = () => {
@@ -89,29 +91,36 @@ export const Home: FC = () => {
         else return tasks
     }
 
-    return <>
-        <AddItemForm placeholder={'Add a new list'} addItem={addTodoList}/>
-        <div className="home">
+    return <Layout>
+
+        <Grid container justifyContent={'center'}>
+            <Grid item>
+                <Box>
+                    <AddItemForm placeholder={'Add new list'} addItem={addTodoList}/>
+                </Box>
+            </Grid>
+        </Grid>
+        <Grid container columnSpacing={7}>
             {todoLists.map(({id, title, filter}) => {
                     const filteredTasks = filteredTasksHandler(tasks[id], filter)
 
-                    return <TodoList
-                        key={id + title}
-                        id={id}
-                        title={title}
-                        tasks={filteredTasks}
-                        removeHandler={removeHandler}
-                        changeFilter={changeFilterHandler}
-                        addTask={addTask}
-                        changeTask={changeTask}
-                        filter={filter}
-                        removeTodoList={remodeTodoList}
-                        changeTaskTitle={changeTaskTitle}
-                        changeListTitle={changeListTitle}
-                    />
+                    return <Grid key={id + title} item>
+                        <TodoList
+                            id={id}
+                            title={title}
+                            tasks={filteredTasks}
+                            removeHandler={removeHandler}
+                            changeFilter={changeFilterHandler}
+                            addTask={addTask}
+                            changeTask={changeTask}
+                            filter={filter}
+                            removeTodoList={remodeTodoList}
+                            changeTaskTitle={changeTaskTitle}
+                            changeListTitle={changeListTitle}
+                        />
+                    </Grid>
                 }
             )}
-        </div>
-    </>
-
+        </Grid>
+    </Layout>
 }
