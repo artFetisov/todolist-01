@@ -11,7 +11,7 @@ interface ITodoListProps {
     id: string
     title: string
     tasks: ITodoItem[]
-    removeHandler: (id: string, todoListId: string) => void
+    removeTask: (id: string, todoListId: string) => void
     changeFilter: (value: FilterValuesType, todoListId: string) => void
     addTask: (title: string, todoListId: string) => void
     changeTaskStatus: (taskId: string, isDone: boolean, todoListid: string) => void
@@ -26,7 +26,7 @@ export const TodoList: FC<ITodoListProps> = (
         id,
         title,
         tasks,
-        removeHandler,
+        removeTask,
         changeFilter,
         addTask,
         changeTaskStatus,
@@ -67,7 +67,7 @@ export const TodoList: FC<ITodoListProps> = (
                         todoListId={id}
                         task={task}
                         key={task.id}
-                        removeHandler={removeHandler}
+                        removeTask={removeTask}
                         changeTaskStatus={changeTaskStatus}
                         changeTaskTitle={changeTaskTitle}
                     />

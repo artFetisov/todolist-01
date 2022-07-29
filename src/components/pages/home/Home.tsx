@@ -22,7 +22,7 @@ export const Home: FC = () => {
         setTasks({...tasks, [newTodoList.id]: []})
     }
 
-    function removeHandler(id: string, todoListId: string) {
+    function removeTask(id: string, todoListId: string) {
         setTasks({...tasks, [todoListId]: tasks[todoListId].filter(tl => tl.id !== id)})
     }
 
@@ -37,7 +37,7 @@ export const Home: FC = () => {
         }
     }
 
-    function changeFilterHandler(value: FilterValuesType, todoListId: string) {
+    function changeFilter(value: FilterValuesType, todoListId: string) {
         setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, filter: value} : tl))
     }
 
@@ -54,7 +54,7 @@ export const Home: FC = () => {
     }
 
     function removeTodoList(todoListId: string) {
-        setTodoLists([...todoLists.filter(tl => tl.id !== todoListId)])
+        setTodoLists(todoLists.filter(tl => tl.id !== todoListId))
         delete tasks[todoListId]
         setTasks({...tasks})
     }
@@ -67,9 +67,7 @@ export const Home: FC = () => {
 
     return <Layout>
         <Grid container justifyContent={'center'}>
-
             <AddItemForm placeholder={'Add new list'} addItem={addTodoList}/>
-
         </Grid>
         <Grid container columnSpacing={7}>
             {todoLists.map(({id, title, filter}) => {
@@ -80,8 +78,8 @@ export const Home: FC = () => {
                             id={id}
                             title={title}
                             tasks={filteredTasks}
-                            removeHandler={removeHandler}
-                            changeFilter={changeFilterHandler}
+                            removeTask={removeTask}
+                            changeFilter={changeFilter}
                             addTask={addTask}
                             changeTaskStatus={changeTaskStatus}
                             filter={filter}

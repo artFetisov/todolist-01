@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ITodoItemProps {
     task: ITodoItem
-    removeHandler: (id: string, todoListId: string) => void
+    removeTask: (id: string, todoListId: string) => void
     changeTaskStatus: (taskId: string, isDone: boolean, todoListId: string) => void
     todoListId: string
     changeTaskTitle: (todoListId: string, taskId: string, newTitle: string) => void
@@ -16,14 +16,14 @@ interface ITodoItemProps {
 export const TodoListItem: FC<ITodoItemProps> = (
     {
         task,
-        removeHandler,
+        removeTask,
         changeTaskStatus,
         todoListId,
         changeTaskTitle
     }) => {
 
     function onRemoveHandler() {
-        removeHandler(task.id, todoListId)
+        removeTask(task.id, todoListId)
     }
 
     function onChangeHandler(e: ChangeEvent<HTMLInputElement>) {
