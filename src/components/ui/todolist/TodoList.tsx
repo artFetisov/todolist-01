@@ -4,7 +4,6 @@ import {TodoListItem} from "./TodoListItem";
 import {FilterValuesType} from './todolist.types'
 import {AddItemForm} from "./AddItemForm";
 import {btnTitles} from "./todolist.data";
-import styles from './TodoList.module.css'
 import {EditableSpan} from "./EditableSpan";
 import {Button, Card, Typography} from "@mui/material";
 
@@ -15,7 +14,7 @@ interface ITodoListProps {
     removeHandler: (id: string, todoListId: string) => void
     changeFilter: (value: FilterValuesType, todoListId: string) => void
     addTask: (title: string, todoListId: string) => void
-    changeTask: (taskId: string, isDone: boolean, todoListid: string) => void
+    changeTaskStatus: (taskId: string, isDone: boolean, todoListid: string) => void
     filter: FilterValuesType
     removeTodoList: (todoListId: string) => void
     changeTaskTitle: (todoListId: string, taskId: string, newTitle: string) => void
@@ -30,7 +29,7 @@ export const TodoList: FC<ITodoListProps> = (
         removeHandler,
         changeFilter,
         addTask,
-        changeTask,
+        changeTaskStatus,
         filter,
         removeTodoList,
         changeTaskTitle,
@@ -69,7 +68,7 @@ export const TodoList: FC<ITodoListProps> = (
                         task={task}
                         key={task.id}
                         removeHandler={removeHandler}
-                        changeTask={changeTask}
+                        changeTaskStatus={changeTaskStatus}
                         changeTaskTitle={changeTaskTitle}
                     />
                 ) : <Typography variant="h6">Tasks not found</Typography>}
@@ -80,7 +79,6 @@ export const TodoList: FC<ITodoListProps> = (
             {btnTitles.map(title => <Button
                     onClick={onSetFilter}
                     value={title.toLowerCase()}
-                    className={title.toLowerCase() === filter ? styles.btnActive : ''}
                     key={title}
                     variant={title.toLowerCase() === filter ? 'contained' : 'outlined'}
                 >

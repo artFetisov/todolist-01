@@ -5,7 +5,7 @@ import {FilterValuesType, ITasks, ITodoItem, ITodoList} from "../../ui/todolist/
 import {v1} from "uuid";
 import {AddItemForm} from "../../ui/todolist/AddItemForm";
 import {Layout} from "../../../layout/Layout";
-import {Box, Grid} from "@mui/material";
+import {Grid} from "@mui/material";
 
 
 export const Home: FC = () => {
@@ -19,17 +19,12 @@ export const Home: FC = () => {
             filter: 'all'
         }
         setTodoLists([...todoLists, newTodoList])
-        // tasks[newTodoList.id] = []
         setTasks({...tasks, [newTodoList.id]: []})
     }
 
-
     function removeHandler(id: string, todoListId: string) {
-        const filteredTasks = tasks[todoListId].filter(t => t.id !== id)
-        tasks[todoListId] = filteredTasks
-        setTasks({...tasks})
+        setTasks({...tasks, [todoListId]: tasks[todoListId].filter(tl => tl.id !== id)})
     }
-
 
     function addTask(title: string, todoListId: string) {
         if (title.trim().length > 0) {
@@ -38,49 +33,28 @@ export const Home: FC = () => {
                 title,
                 isDone: false
             }
-            const newTasks = [newTask, ...tasks[todoListId]]
-            tasks[todoListId] = newTasks
-            setTasks({...tasks})
+            setTasks({...tasks, [todoListId]: [newTask, ...tasks[todoListId]]})
         }
     }
 
     function changeFilterHandler(value: FilterValuesType, todoListId: string) {
-        const todoList = todoLists.find(list => list.id === todoListId)
-        if (todoList) {
-            todoList.filter = value
-            setTodoLists([...todoLists])
-        }
-
+        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, filter: value} : tl))
     }
 
-
-    function changeTask(taskId: string, isDone: boolean, todoListId: string) {
-        const task = tasks[todoListId].find(t => t.id === taskId)
-        if (task) {
-            task.isDone = isDone
-            setTasks({...tasks})
-        }
+    function changeTaskStatus(taskId: string, isDone: boolean, todoListId: string) {
+        setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, isDone} : t)})
     }
 
     function changeTaskTitle(todoListId: string, taskId: string, newTitle: string) {
-        const task = tasks[todoListId].find(t => t.id === taskId)
-        if (task) {
-            task.title = newTitle
-            setTasks({...tasks})
-        }
+        setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, title: newTitle} : t)})
     }
 
     function changeListTitle(todoListId: string, newTitle: string) {
-        const todoList = todoLists.find(todo => todo.id === todoListId)
-        if (todoList) {
-            todoList.title = newTitle
-        }
-        setTodoLists([...todoLists])
+        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, title: newTitle} : tl))
     }
 
-    function remodeTodoList(todoListId: string) {
-        const filteredTodoLists = todoLists.filter(list => list.id !== todoListId)
-        setTodoLists([...filteredTodoLists])
+    function removeTodoList(todoListId: string) {
+        setTodoLists([...todoLists.filter(tl => tl.id !== todoListId)])
         delete tasks[todoListId]
         setTasks({...tasks})
     }
@@ -92,13 +66,10 @@ export const Home: FC = () => {
     }
 
     return <Layout>
-
         <Grid container justifyContent={'center'}>
-            <Grid item>
-                <Box>
-                    <AddItemForm placeholder={'Add new list'} addItem={addTodoList}/>
-                </Box>
-            </Grid>
+
+            <AddItemForm placeholder={'Add new list'} addItem={addTodoList}/>
+
         </Grid>
         <Grid container columnSpacing={7}>
             {todoLists.map(({id, title, filter}) => {
@@ -112,9 +83,9 @@ export const Home: FC = () => {
                             removeHandler={removeHandler}
                             changeFilter={changeFilterHandler}
                             addTask={addTask}
-                            changeTask={changeTask}
+                            changeTaskStatus={changeTaskStatus}
                             filter={filter}
-                            removeTodoList={remodeTodoList}
+                            removeTodoList={removeTodoList}
                             changeTaskTitle={changeTaskTitle}
                             changeListTitle={changeListTitle}
                         />

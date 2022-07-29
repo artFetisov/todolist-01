@@ -53,5 +53,5 @@ export const EditableSpan: FC<IEditableSpanProps> = ({title, changeTitleHandler,
             value={newTitle}
             variant="standard"
         />
-        : <span onDoubleClick={setEditModeHandler}>{title}</span>
+        : <Typography variant="overline" onDoubleClick={setEditModeHandler}>{title}</Typography>
 }

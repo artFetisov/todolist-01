@@ -1,5 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, FC, useState} from "react";
-import {Button, TextField} from "@mui/material";
+import {Button, Grid, TextField} from "@mui/material";
 
 interface IAddItemFormProps {
     addItem: (title: string) => void
@@ -36,7 +36,7 @@ export const AddItemForm: FC<IAddItemFormProps> = ({addItem, placeholder}) => {
         setNewTaskTitle('')
     }
 
-    return <div style={{margin: '30px', display: 'flex', alignItems: 'center'}}>
+    return <Grid style={{margin: '30px'}}>
         <TextField
             error={isError}
             id="outlined-basic"
@@ -56,8 +56,9 @@ export const AddItemForm: FC<IAddItemFormProps> = ({addItem, placeholder}) => {
             onClick={addTaskHandler}
             disabled={isError}
             size={"medium"}
+            style={{margin: 'auto'}}
         >
             Add
         </Button>
-    </div>
+    </Grid>
 }
