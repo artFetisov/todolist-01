@@ -4,7 +4,7 @@ import {allTasks, todoListsData} from "../../ui/todolist/todolist.data";
 import {FilterValuesType, ITasks, ITodoItem, ITodoList} from "../../ui/todolist/todolist.types";
 import {v1} from "uuid";
 import {AddItemForm} from "../../ui/todolist/AddItemForm";
-import {Layout} from "../../../layout/Layout";
+import {Layout} from "../../layout/Layout";
 import {Grid} from "@mui/material";
 
 
