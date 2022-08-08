@@ -15,24 +15,33 @@ export enum TodoListActionEnum {
 
 export interface RemoveTodoListAction {
     type: TodoListActionEnum.REMOVE_TODO_LIST,
-    todoListID: string
+    payload: {
+        todoListID: string
+    }
 }
 
 export interface AddTodoListAction {
     type: TodoListActionEnum.ADD_TODO_LIST,
-    newTodoListTitle: string
+    payload: {
+        newTodoListTitle: string,
+        todoListId: string
+    }
 }
 
 export interface ChangeTodoListTitleAction {
     type: TodoListActionEnum.CHANGE_TODO_LIST_TITLE,
-    todoListID: string,
-    newTitle: string
+    payload: {
+        todoListID: string,
+        newTitle: string
+    }
 }
 
 export interface ChangeTodoListFilterAction {
     type: TodoListActionEnum.CHANGE_TODO_LIST_FILTER,
-    todoListID: string,
-    newFilter: FilterValuesType
+    payload: {
+        todoListID: string,
+        newFilter: FilterValuesType
+    }
 }
 
 export type TodoListActions =

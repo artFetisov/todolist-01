@@ -1,4 +1,5 @@
 import {ITodoItem} from "../../components/ui/todolist/todolist.types";
+import {AddTodoListAction, RemoveTodoListAction} from "../todolists/types";
 
 export interface ITasksState {
     [key: string]: ITodoItem[]
@@ -13,28 +14,46 @@ export enum TasksActionEnum {
 
 export interface RemoveTaskAction {
     type: TasksActionEnum.REMOVE_TASK,
-    todoListId: string,
-    taskId: string
+    payload: {
+        todoListId: string,
+        taskId: string
+    }
+
 }
 
 export interface AddTaskAction {
     type: TasksActionEnum.ADD_TASK,
-    todoListId: string,
-    taskTitle: string
+    payload: {
+        todoListId: string,
+        taskTitle: string
+    }
+
 }
 
 export interface ChangeTaskStatusAction {
     type: TasksActionEnum.CHANGE_TASK_STATUS,
-    todoListId: string,
-    taskId: string,
-    status: boolean
+    payload: {
+        todoListId: string,
+        taskId: string,
+        status: boolean
+    }
+
 }
 
 export interface ChangeTaskTitleAction {
     type: TasksActionEnum.CHANGE_TASK_TITLE,
-    todoListId: string,
-    taskId: string,
-    newTitle: string
+    payload: {
+        todoListId: string,
+        taskId: string,
+        newTitle: string
+    }
+
 }
 
-export type TasksActions = RemoveTaskAction | AddTaskAction | ChangeTaskStatusAction | ChangeTaskTitleAction
+export type TasksActions =
+    RemoveTaskAction
+    | AddTaskAction
+    | ChangeTaskStatusAction
+    | ChangeTaskTitleAction
+    | AddTodoListAction
+    | RemoveTodoListAction

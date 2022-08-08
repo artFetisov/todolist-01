@@ -12,6 +12,20 @@ export const Home: FC = () => {
     const [todoLists, setTodoLists] = useState<ITodoList[]>(todoListsData)
     const [tasks, setTasks] = useState<ITasks>(allTasks)
 
+        function changeListTitle(todoListId: string, newTitle: string) {
+        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, title: newTitle} : tl))
+    }
+
+    function removeTodoList(todoListId: string) {
+        setTodoLists(todoLists.filter(tl => tl.id !== todoListId))
+        delete tasks[todoListId]
+        setTasks({...tasks})
+    }
+
+    function changeFilter(value: FilterValuesType, todoListId: string) {
+        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, filter: value} : tl))
+    }
+
     function addTodoList(title: string) {
         const newTodoList: ITodoList = {
             id: v1(),
@@ -37,26 +51,12 @@ export const Home: FC = () => {
         }
     }
 
-    function changeFilter(value: FilterValuesType, todoListId: string) {
-        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, filter: value} : tl))
-    }
-
     function changeTaskStatus(taskId: string, isDone: boolean, todoListId: string) {
         setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, isDone} : t)})
     }
 
     function changeTaskTitle(todoListId: string, taskId: string, newTitle: string) {
         setTasks({...tasks, [todoListId]: tasks[todoListId].map(t => t.id === taskId ? {...t, title: newTitle} : t)})
-    }
-
-    function changeListTitle(todoListId: string, newTitle: string) {
-        setTodoLists(todoLists.map(tl => tl.id === todoListId ? {...tl, title: newTitle} : tl))
-    }
-
-    function removeTodoList(todoListId: string) {
-        setTodoLists(todoLists.filter(tl => tl.id !== todoListId))
-        delete tasks[todoListId]
-        setTasks({...tasks})
     }
 
     function filteredTasksHandler(tasks: ITodoItem[], filter: FilterValuesType): ITodoItem[] {

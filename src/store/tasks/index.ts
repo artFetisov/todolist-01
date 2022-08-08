@@ -1,6 +1,7 @@
 import {v1} from "uuid";
 import {ITasksState, TasksActionEnum, TasksActions} from "./types";
 import {ITodoItem} from "../../components/ui/todolist/todolist.types";
+import {TodoListActionEnum} from "../todolists/types";
 
 const initialState: ITasksState = {
     [v1()]: [
@@ -17,41 +18,50 @@ const initialState: ITasksState = {
 
 export default function tasksReducer(state: ITasksState = initialState, action: TasksActions): ITasksState {
     switch (action.type) {
-        case TasksActionEnum.REMOVE_TASK:
-            return {
-                ...state,
-                [action.todoListId]: state[action.todoListId].filter(task => task.id !== action.taskId)
-            }
-
         case TasksActionEnum.ADD_TASK:
             const newTask: ITodoItem = {
                 id: v1(),
-                title: action.taskTitle,
+                title: action.payload.taskTitle,
                 isDone: false
             }
-
             return {
                 ...state,
-                [action.todoListId]: [newTask, ...state[action.todoListId]]
+                [action.payload.todoListId]: [newTask, ...state[action.payload.todoListId]]
             }
 
         case TasksActionEnum.CHANGE_TASK_STATUS:
             return {
                 ...state,
-                [action.todoListId]: state[action.todoListId].map(task => task.id === action.taskId ? {
+                [action.payload.todoListId]: state[action.payload.todoListId].map(task => task.id === action.payload.taskId ? {
                     ...task,
-                    isDone: action.status
+                    isDone: action.payload.status
                 } : task)
             }
 
         case TasksActionEnum.CHANGE_TASK_TITLE:
             return {
                 ...state,
-                [action.todoListId]: state[action.todoListId].map(task => task.id === action.taskId ? {
+                [action.payload.todoListId]: state[action.payload.todoListId].map(task => task.id === action.payload.taskId ? {
                     ...task,
-                    title: action.newTitle
+                    title: action.payload.newTitle
                 } : task)
             }
+
+        case TasksActionEnum.REMOVE_TASK:
+            return {
+                ...state,
+                [action.payload.todoListId]: state[action.payload.todoListId].filter(task => task.id !== action.payload.taskId)
+            }
+
+        case TodoListActionEnum.ADD_TODO_LIST:
+            return {
+                ...state,
+                [action.payload.todoListId]: []
+            }
+
+        case TodoListActionEnum.REMOVE_TODO_LIST:
+            delete state[action.payload.todoListID]
+            return {...state}
 
         default:
             return state
