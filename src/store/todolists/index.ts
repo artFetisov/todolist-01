@@ -8,6 +8,7 @@ const initialState: ITodoListState[] = [
 
 export default function todoListsReducer(state: ITodoListState[] = initialState, action: TodoListActions): ITodoListState[] {
     switch (action.type) {
+
         case TodoListActionEnum.ADD_TODO_LIST:
             const newTodoList: ITodoListState = {
                 id: action.payload.todoListId,
