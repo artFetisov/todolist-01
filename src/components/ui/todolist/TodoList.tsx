@@ -6,51 +6,53 @@ import {AddItemForm} from "./AddItemForm";
 import {btnTitles} from "./todolist.data";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Card, Typography} from "@mui/material";
+import {TasksActionCreators} from "../../../store/reducers/tasks/action-creators";
+import {useDispatch, useSelector} from "react-redux";
+import {TodoListsActionCreators} from "../../../store/reducers/todolists/action-creators";
+import {AppRootState} from "../../../store";
+import {ITasksState} from "../../../store/reducers/tasks/types";
 
 interface ITodoListProps {
-    id: string
+    todoListId: string
     title: string
-    tasks: ITodoItem[]
-    removeTask: (id: string, todoListId: string) => void
-    changeFilter: (value: FilterValuesType, todoListId: string) => void
-    addTask: (title: string, todoListId: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean, todoListid: string) => void
     filter: FilterValuesType
-    removeTodoList: (todoListId: string) => void
-    changeTaskTitle: (todoListId: string, taskId: string, newTitle: string) => void
-    changeListTitle: (todoListId: string, newTitle: string) => void
 }
 
 export const TodoList: FC<ITodoListProps> = (
     {
-        id,
+        todoListId,
         title,
-        tasks,
-        removeTask,
-        changeFilter,
-        addTask,
-        changeTaskStatus,
         filter,
-        removeTodoList,
-        changeTaskTitle,
-        changeListTitle
     }
 ) => {
+    const dispatch = useDispatch()
+    const tasks = useSelector<AppRootState, ITasksState>(state => state.tasks)
+
     function addItem(title: string) {
-        addTask(title, id)
+        if (title.trim().length > 0) {
+            dispatch(TasksActionCreators.addTask(todoListId, title))
+        }
     }
 
     function onSetFilter(e: MouseEvent<HTMLButtonElement>) {
-        changeFilter(e.currentTarget.value as FilterValuesType, id)
+        dispatch(TodoListsActionCreators.changeTodoListFilter(todoListId, e.currentTarget.value as FilterValuesType))
     }
 
     function onRemoveTodoList() {
-        removeTodoList(id)
+        dispatch(TodoListsActionCreators.removeTodoList(todoListId))
     }
 
     function changeListTitleHandler(title: string) {
-        changeListTitle(id, title)
+        dispatch(TodoListsActionCreators.changeTodoListTitle(todoListId, title))
     }
+
+    function filteredTasksHandler(tasks: ITodoItem[], filter: FilterValuesType): ITodoItem[] {
+        if (filter === 'completed') return tasks.filter(t => t.isDone)
+        else if (filter === 'active') return tasks.filter(t => !t.isDone)
+        else return tasks
+    }
+
+    const filteredTasks = filteredTasksHandler(tasks[todoListId], filter)
 
     return <div style={{marginTop: '50px'}}>
         <div style={{display: 'flex', alignItems: 'start', justifyContent: 'space-between'}}>
@@ -63,13 +65,10 @@ export const TodoList: FC<ITodoListProps> = (
         />
         <Card>
             <ul>
-                {tasks.length > 0 ? tasks.map(task => <TodoListItem
-                        todoListId={id}
+                {filteredTasks.length > 0 ? filteredTasks.map(task => <TodoListItem
+                        todoListId={todoListId}
                         task={task}
                         key={task.id}
-                        removeTask={removeTask}
-                        changeTaskStatus={changeTaskStatus}
-                        changeTaskTitle={changeTaskTitle}
                     />
                 ) : <Typography variant="h6">Tasks not found</Typography>}
             </ul>

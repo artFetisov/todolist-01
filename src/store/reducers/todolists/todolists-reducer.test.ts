@@ -2,7 +2,7 @@ import {ITodoListState} from "./types";
 import {v1} from "uuid";
 import todoListsReducer from "./index";
 import {TodoListsActionCreators} from "./action-creators";
-import {FilterValuesType} from "../../components/ui/todolist/todolist.types";
+import {FilterValuesType} from "../../../components/ui/todolist/todolist.types";
 
 test('correct todolist should be removed', () => {
     const todolistId1 = v1()
@@ -35,7 +35,7 @@ test('correct todolist should be added', () => {
     const endState = todoListsReducer(startState, TodoListsActionCreators.addTodoList(newTodoListTitle))
 
     expect(endState.length).toBe(3)
-    expect(endState[2].title).toBe(newTodoListTitle)
+    expect(endState[0].title).toBe(newTodoListTitle)
 })
 
 test('correct todolist should change its name', () => {

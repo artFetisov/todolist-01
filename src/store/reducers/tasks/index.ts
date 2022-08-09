@@ -1,20 +1,10 @@
 import {v1} from "uuid";
 import {ITasksState, TasksActionEnum, TasksActions} from "./types";
-import {ITodoItem} from "../../components/ui/todolist/todolist.types";
+import {ITodoItem} from "../../../components/ui/todolist/todolist.types";
 import {TodoListActionEnum} from "../todolists/types";
+import {allTasks} from "../../../components/ui/todolist/todolist.data";
 
-const initialState: ITasksState = {
-    [v1()]: [
-        {id: '1', title: 'CSS', isDone: false},
-        {id: '2', title: 'JS', isDone: true},
-        {id: '3', title: 'TS', isDone: false},
-    ],
-    [v1()]: [
-        {id: '1', title: 'CSS', isDone: false},
-        {id: '2', title: 'JS', isDone: true},
-        {id: '3', title: 'TS', isDone: false},
-    ]
-}
+const initialState: ITasksState = allTasks
 
 export default function tasksReducer(state: ITasksState = initialState, action: TasksActions): ITasksState {
     switch (action.type) {

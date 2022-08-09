@@ -4,34 +4,31 @@ import styles from './TodoList.module.css'
 import {EditableSpan} from "./EditableSpan";
 import {Checkbox, IconButton} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
+import {TasksActionCreators} from "../../../store/reducers/tasks/action-creators";
+import {useDispatch} from "react-redux";
 
 interface ITodoItemProps {
     task: ITodoItem
-    removeTask: (id: string, todoListId: string) => void
-    changeTaskStatus: (taskId: string, isDone: boolean, todoListId: string) => void
     todoListId: string
-    changeTaskTitle: (todoListId: string, taskId: string, newTitle: string) => void
 }
 
 export const TodoListItem: FC<ITodoItemProps> = (
     {
         task,
-        removeTask,
-        changeTaskStatus,
         todoListId,
-        changeTaskTitle
     }) => {
+    const dispatch = useDispatch()
 
     function onRemoveHandler() {
-        removeTask(task.id, todoListId)
+        dispatch(TasksActionCreators.removeTask(todoListId, task.id))
     }
 
     function onChangeHandler(e: ChangeEvent<HTMLInputElement>) {
-        changeTaskStatus(task.id, e.currentTarget.checked, todoListId)
+        dispatch(TasksActionCreators.changeTaskStatus(todoListId, task.id, e.currentTarget.checked))
     }
 
     function changeTaskTitleHandler(title: string) {
-        changeTaskTitle(todoListId, task.id, title)
+        dispatch(TasksActionCreators.changeTaskTitle(todoListId, task.id, title))
     }
 
     return <li className={task.isDone ? styles.isDone : ''}>

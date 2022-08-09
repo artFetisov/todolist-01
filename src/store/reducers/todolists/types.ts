@@ -1,4 +1,4 @@
-import {FilterValuesType} from "../../components/ui/todolist/todolist.types";
+import {FilterValuesType} from "../../../components/ui/todolist/todolist.types";
 
 export interface ITodoListState {
     id: string

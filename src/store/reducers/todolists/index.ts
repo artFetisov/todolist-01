@@ -1,10 +1,7 @@
-import {v1} from "uuid";
 import {ITodoListState, TodoListActionEnum, TodoListActions} from "./types";
+import {todoListsData} from "../../../components/ui/todolist/todolist.data";
 
-const initialState: ITodoListState[] = [
-    {id: v1(), title: 'What to learn', filter: 'all'},
-    {id: v1(), title: 'What to buy', filter: 'all'},
-]
+const initialState: ITodoListState[] = todoListsData
 
 export default function todoListsReducer(state: ITodoListState[] = initialState, action: TodoListActions): ITodoListState[] {
     switch (action.type) {
@@ -15,7 +12,7 @@ export default function todoListsReducer(state: ITodoListState[] = initialState,
                 title: action.payload.newTodoListTitle,
                 filter: 'all'
             }
-            return [...state, newTodoList]
+            return [newTodoList, ...state]
 
         case TodoListActionEnum.CHANGE_TODO_LIST_TITLE:
             return state.map(list => list.id === action.payload.todoListID ? {

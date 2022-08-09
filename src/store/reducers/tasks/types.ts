@@ -1,4 +1,4 @@
-import {ITodoItem} from "../../components/ui/todolist/todolist.types";
+import {ITodoItem} from "../../../components/ui/todolist/todolist.types";
 import {AddTodoListAction, RemoveTodoListAction} from "../todolists/types";
 
 export interface ITasksState {

@@ -5,7 +5,7 @@ import {
     RemoveTodoListAction,
     TodoListActionEnum
 } from "./types";
-import {FilterValuesType} from "../../components/ui/todolist/todolist.types";
+import {FilterValuesType} from "../../../components/ui/todolist/todolist.types";
 import {v1} from "uuid";
 
 
