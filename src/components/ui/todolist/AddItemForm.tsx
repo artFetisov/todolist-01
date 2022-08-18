@@ -6,7 +6,9 @@ interface IAddItemFormProps {
     placeholder?: string
 }
 
-export const AddItemForm: FC<IAddItemFormProps> = ({addItem, placeholder}) => {
+export const AddItemForm: FC<IAddItemFormProps> = React.memo(({addItem, placeholder}) => {
+    console.log('render AddItemForm')
+
     const [newTaskTitle, setNewTaskTitle] = useState<string>('')
     const [error, setError] = useState<string>('')
     const isError = error.length > 0
@@ -17,13 +19,8 @@ export const AddItemForm: FC<IAddItemFormProps> = ({addItem, placeholder}) => {
     }
 
     function onKeyPressHandler(e: KeyboardEvent<HTMLInputElement>) {
-        if (newTaskTitle.trim() === '') {
-            setError('Title is required')
-            return
-        }
         if (e.key === 'Enter') {
-            addItem(newTaskTitle.trim())
-            setNewTaskTitle('')
+            addTaskHandler()
         }
     }
 
@@ -61,4 +58,4 @@ export const AddItemForm: FC<IAddItemFormProps> = ({addItem, placeholder}) => {
             Add
         </Button>
     </Grid>
-}
+})

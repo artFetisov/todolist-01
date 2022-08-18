@@ -4,34 +4,31 @@ import todoListsReducer from "./index";
 import {TodoListsActionCreators} from "./action-creators";
 import {FilterValuesType} from "../../../components/ui/todolist/todolist.types";
 
-test('correct todolist should be removed', () => {
-    const todolistId1 = v1()
-    const todolistId2 = v1()
+let todoListId1: string
+let todoListId2: string
+let startState: ITodoListState[]
 
-    const startState: ITodoListState[] = [
-        {id: todolistId1, title: 'What to learn', filter: 'all'},
-        {id: todolistId2, title: 'What to buy', filter: 'all'}
+beforeEach(() => {
+    todoListId1 = v1()
+    todoListId2 = v1()
+    startState = [
+        {id: todoListId1, title: 'What to learn', filter: 'all'},
+        {id: todoListId2, title: 'What to buy', filter: 'all'}
     ]
+})
 
-    const endState = todoListsReducer(startState, TodoListsActionCreators.removeTodoList(todolistId1))
+
+test('correct todolist should be removed', () => {
+    const endState = todoListsReducer(startState, TodoListsActionCreators.removeTodoList(todoListId1))
 
     expect(endState.length).toBe(1)
-    expect(endState[0].id).toBe(todolistId2)
+    expect(endState[0].id).toBe(todoListId2)
     expect(endState[0].title).toBe('What to buy')
     expect(endState[0].filter).toBe('all')
 })
 
 test('correct todolist should be added', () => {
-    let todolistId1 = v1()
-    let todolistId2 = v1()
-
     let newTodoListTitle = 'New Todolist'
-
-    const startState: ITodoListState[] = [
-        {id: todolistId1, title: 'What to learn', filter: 'all'},
-        {id: todolistId2, title: 'What to buy', filter: 'all'}
-    ]
-
     const endState = todoListsReducer(startState, TodoListsActionCreators.addTodoList(newTodoListTitle))
 
     expect(endState.length).toBe(3)
@@ -39,36 +36,16 @@ test('correct todolist should be added', () => {
 })
 
 test('correct todolist should change its name', () => {
-    let todolistId1 = v1()
-    let todolistId2 = v1()
-
     let newTodolistTitle = 'New Todolist'
-
-    const startState: ITodoListState[] = [
-        {id: todolistId1, title: 'What to learn', filter: 'all'},
-        {id: todolistId2, title: 'What to buy', filter: 'all'}
-    ]
-
-
-    const endState = todoListsReducer(startState, TodoListsActionCreators.changeTodoListTitle(todolistId2, newTodolistTitle))
+    const endState = todoListsReducer(startState, TodoListsActionCreators.changeTodoListTitle(todoListId2, newTodolistTitle))
 
     expect(endState[0].title).toBe('What to learn')
     expect(endState[1].title).toBe(newTodolistTitle)
 })
 
 test('correct filter of todolist should be changed', () => {
-    let todolistId1 = v1()
-    let todolistId2 = v1()
-
-    let newFilter: FilterValuesType = 'completed'
-
-    const startState: ITodoListState[] = [
-        {id: todolistId1, title: 'What to learn', filter: 'all'},
-        {id: todolistId2, title: 'What to buy', filter: 'all'}
-    ]
-
-
-    const endState = todoListsReducer(startState, TodoListsActionCreators.changeTodoListFilter(todolistId2, newFilter))
+    const newFilter: FilterValuesType = 'completed'
+    const endState = todoListsReducer(startState, TodoListsActionCreators.changeTodoListFilter(todoListId2, newFilter))
 
     expect(endState[0].filter).toBe('all')
     expect(endState[1].filter).toBe(newFilter)

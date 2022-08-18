@@ -1,4 +1,4 @@
-import React, {ChangeEvent, FC} from "react";
+import React, {ChangeEvent, FC, useCallback} from "react";
 import {ITodoItem} from "./todolist.types";
 import styles from './TodoList.module.css'
 import {EditableSpan} from "./EditableSpan";
@@ -12,12 +12,13 @@ interface ITodoItemProps {
     todoListId: string
 }
 
-export const TodoListItem: FC<ITodoItemProps> = (
+export const TodoListItem: FC<ITodoItemProps> = React.memo((
     {
         task,
         todoListId,
     }) => {
     const dispatch = useDispatch()
+    console.log('todoList Item is render')
 
     function onRemoveHandler() {
         dispatch(TasksActionCreators.removeTask(todoListId, task.id))
@@ -27,9 +28,9 @@ export const TodoListItem: FC<ITodoItemProps> = (
         dispatch(TasksActionCreators.changeTaskStatus(todoListId, task.id, e.currentTarget.checked))
     }
 
-    function changeTaskTitleHandler(title: string) {
+    const changeTaskTitleHandler = useCallback((title: string) => {
         dispatch(TasksActionCreators.changeTaskTitle(todoListId, task.id, title))
-    }
+    }, [todoListId, task.id, dispatch])
 
     return <li className={task.isDone ? styles.isDone : ''}>
         <Checkbox checked={task.isDone} onChange={onChangeHandler} size={"small"}/>
@@ -38,4 +39,4 @@ export const TodoListItem: FC<ITodoItemProps> = (
             <DeleteIcon/>
         </IconButton>
     </li>
-}
+})

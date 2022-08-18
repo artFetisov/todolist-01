@@ -1,4 +1,4 @@
-import React, {FC, MouseEvent} from "react";
+import React, {FC, MouseEvent, useCallback, useMemo} from "react";
 import {ITodoItem} from "./todolist.types";
 import {TodoListItem} from "./TodoListItem";
 import {FilterValuesType} from './todolist.types'
@@ -7,32 +7,31 @@ import {btnTitles} from "./todolist.data";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Card, Typography} from "@mui/material";
 import {TasksActionCreators} from "../../../store/reducers/tasks/action-creators";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {TodoListsActionCreators} from "../../../store/reducers/todolists/action-creators";
-import {AppRootState} from "../../../store";
-import {ITasksState} from "../../../store/reducers/tasks/types";
 
 interface ITodoListProps {
     todoListId: string
     title: string
     filter: FilterValuesType
+    tasks: ITodoItem[]
 }
 
-export const TodoList: FC<ITodoListProps> = (
+export const TodoList: FC<ITodoListProps> = React.memo((
     {
         todoListId,
         title,
         filter,
+        tasks
     }
 ) => {
     const dispatch = useDispatch()
-    const tasks = useSelector<AppRootState, ITasksState>(state => state.tasks)
 
-    function addItem(title: string) {
-        if (title.trim().length > 0) {
-            dispatch(TasksActionCreators.addTask(todoListId, title))
-        }
-    }
+    console.log('todoList is  render', todoListId, title)
+
+    const addItem = useCallback((title: string) => {
+        dispatch(TasksActionCreators.addTask(todoListId, title))
+    }, [todoListId, dispatch])
 
     function onSetFilter(e: MouseEvent<HTMLButtonElement>) {
         dispatch(TodoListsActionCreators.changeTodoListFilter(todoListId, e.currentTarget.value as FilterValuesType))
@@ -42,9 +41,9 @@ export const TodoList: FC<ITodoListProps> = (
         dispatch(TodoListsActionCreators.removeTodoList(todoListId))
     }
 
-    function changeListTitleHandler(title: string) {
+    const changeListTitleHandler = useCallback((title: string) => {
         dispatch(TodoListsActionCreators.changeTodoListTitle(todoListId, title))
-    }
+    }, [todoListId, dispatch])
 
     function filteredTasksHandler(tasks: ITodoItem[], filter: FilterValuesType): ITodoItem[] {
         if (filter === 'completed') return tasks.filter(t => t.isDone)
@@ -52,7 +51,7 @@ export const TodoList: FC<ITodoListProps> = (
         else return tasks
     }
 
-    const filteredTasks = filteredTasksHandler(tasks[todoListId], filter)
+    const filteredTasks = useMemo(() => filteredTasksHandler(tasks, filter), [filter, tasks])
 
     return <div style={{marginTop: '50px'}}>
         <div style={{display: 'flex', alignItems: 'start', justifyContent: 'space-between'}}>
@@ -86,4 +85,4 @@ export const TodoList: FC<ITodoListProps> = (
             )}
         </div>
     </div>
-}
+})

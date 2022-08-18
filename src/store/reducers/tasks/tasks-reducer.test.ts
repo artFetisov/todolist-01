@@ -3,8 +3,10 @@ import tasksReducer from "./index";
 import {TasksActionCreators} from "./action-creators";
 import {TodoListsActionCreators} from "../todolists/action-creators";
 
-test('correct task should be deleted from correct array', () => {
-    const startState: ITasksState = {
+let startState: ITasksState
+
+beforeEach(() => {
+    startState = {
         'todoListId1': [
             {id: '1', title: 'CSS', isDone: false},
             {id: '2', title: 'JS', isDone: true},
@@ -16,7 +18,9 @@ test('correct task should be deleted from correct array', () => {
             {id: '3', title: 'Angular', isDone: false},
         ],
     }
+})
 
+test('correct task should be deleted from correct array', () => {
     const endState = tasksReducer(startState, TasksActionCreators.removeTask('todoListId2', '2'))
 
     expect(endState["todoListId1"].length).toBe(3)
@@ -37,19 +41,6 @@ test('correct task should be deleted from correct array', () => {
 })
 
 test('correct task should be added from correct array', () => {
-    const startState: ITasksState = {
-        'todoListId1': [
-            {id: '1', title: 'CSS', isDone: false},
-            {id: '2', title: 'JS', isDone: true},
-            {id: '3', title: 'TS', isDone: false},
-        ],
-        'todoListId2': [
-            {id: '1', title: 'Webpack', isDone: false},
-            {id: '2', title: 'SCSS', isDone: false},
-            {id: '3', title: 'Angular', isDone: false},
-        ],
-    }
-
     const title = 'Sugar'
 
     const endState = tasksReducer(startState, TasksActionCreators.addTask('todoListId2', title))
@@ -63,19 +54,6 @@ test('correct task should be added from correct array', () => {
 
 
 test('status of specified task should be changed', () => {
-    const startState: ITasksState = {
-        'todoListId1': [
-            {id: '1', title: 'CSS', isDone: false},
-            {id: '2', title: 'JS', isDone: true},
-            {id: '3', title: 'TS', isDone: false},
-        ],
-        'todoListId2': [
-            {id: '1', title: 'Webpack', isDone: false},
-            {id: '2', title: 'SCSS', isDone: true},
-            {id: '3', title: 'Angular', isDone: false},
-        ],
-    }
-
     const endState = tasksReducer(startState, TasksActionCreators.changeTaskStatus('todoListId2', '2', false))
 
     expect(endState["todoListId2"][1].isDone).toBeFalsy()
@@ -84,19 +62,6 @@ test('status of specified task should be changed', () => {
 
 
 test('title of specified task should be changed', () => {
-    const startState: ITasksState = {
-        'todoListId1': [
-            {id: '1', title: 'CSS', isDone: false},
-            {id: '2', title: 'JS', isDone: true},
-            {id: '3', title: 'TS', isDone: false},
-        ],
-        'todoListId2': [
-            {id: '1', title: 'Webpack', isDone: false},
-            {id: '2', title: 'SCSS', isDone: true},
-            {id: '3', title: 'Angular', isDone: false},
-        ],
-    }
-
     const newTitle = 'Abracadabra'
 
     const endState = tasksReducer(startState, TasksActionCreators.changeTaskTitle('todoListId2', '2', newTitle))
@@ -107,24 +72,10 @@ test('title of specified task should be changed', () => {
 })
 
 test('new array should be added when new todolist is added', () => {
-    const startState: ITasksState = {
-        'todolistId1': [
-            {id: '1', title: 'CSS', isDone: false},
-            {id: '2', title: 'JS', isDone: true},
-            {id: '3', title: 'React', isDone: false}
-        ],
-        'todolistId2': [
-            {id: '1', title: 'bread', isDone: false},
-            {id: '2', title: 'milk', isDone: true},
-            {id: '3', title: 'tea', isDone: false}
-        ]
-    }
-
-    const endState = tasksReducer(startState, TodoListsActionCreators.addTodoList('What to buy'))
-
+    const endState = tasksReducer(startState, TodoListsActionCreators.addTodoList('todoListId3'))
 
     const keys = Object.keys(endState)
-    const newKey = keys.find(k => k != 'todolistId1' && k != 'todolistId2')
+    const newKey = keys.find(k => k != 'todoListId1' && k != 'todoListId2')
     if (!newKey) {
         throw Error('new key should be added')
     }
@@ -134,23 +85,10 @@ test('new array should be added when new todolist is added', () => {
 })
 
 test('property with todolistId should be deleted', () => {
-    const startState: ITasksState = {
-        'todolistId1': [
-            {id: '1', title: 'CSS', isDone: false},
-            {id: '2', title: 'JS', isDone: true},
-            {id: '3', title: 'React', isDone: false}
-        ],
-        'todolistId2': [
-            {id: '1', title: 'bread', isDone: false},
-            {id: '2', title: 'milk', isDone: true},
-            {id: '3', title: 'tea', isDone: false}
-        ]
-    }
-
-    const endState = tasksReducer(startState, TodoListsActionCreators.removeTodoList('todolistId2'))
+    const endState = tasksReducer(startState, TodoListsActionCreators.removeTodoList('todoListId2'))
 
     const keys = Object.keys(endState)
 
     expect(keys.length).toBe(1)
-    expect(endState['todolistId2']).not.toBeDefined()
+    expect(endState['todoListId2']).not.toBeDefined()
 })

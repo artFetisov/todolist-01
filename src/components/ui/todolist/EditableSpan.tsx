@@ -7,9 +7,11 @@ interface IEditableSpanProps {
     isHeading?: boolean
 }
 
-export const EditableSpan: FC<IEditableSpanProps> = ({title, changeTitleHandler, isHeading}) => {
+export const EditableSpan: FC<IEditableSpanProps> = React.memo(({title, changeTitleHandler, isHeading}) => {
     const [editMode, setEditMode] = useState(false)
     const [newTitle, setNewTitle] = useState('')
+
+    console.log('editSpan is render')
 
     function setEditModeHandler() {
         setNewTitle(title)
@@ -54,4 +56,4 @@ export const EditableSpan: FC<IEditableSpanProps> = ({title, changeTitleHandler,
             variant="standard"
         />
         : <Typography variant="overline" onDoubleClick={setEditModeHandler}>{title}</Typography>
-}
+})
