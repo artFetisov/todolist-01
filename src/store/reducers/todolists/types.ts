@@ -1,10 +1,6 @@
-import {FilterValuesType} from "../../../components/ui/todolist/todolist.types";
+import {FilterValuesType, TodoListType} from "../../../types/todo-list.types";
 
-export interface ITodoListState {
-    id: string
-    title: string
-    filter: FilterValuesType
-}
+export type TodoListStateType = TodoListType
 
 export enum TodoListActionEnum {
     REMOVE_TODO_LIST = 'REMOVE-TODO-LIST',

@@ -1,19 +1,19 @@
-import {ITodoListState} from "./types";
 import {v1} from "uuid";
 import todoListsReducer from "./index";
 import {TodoListsActionCreators} from "./action-creators";
-import {FilterValuesType} from "../../../components/ui/todolist/todolist.types";
+import {TodoListStateType} from "./types";
+import {FilterValuesType} from "../../../types/todo-list.types";
 
 let todoListId1: string
 let todoListId2: string
-let startState: ITodoListState[]
+let startState: TodoListStateType[]
 
 beforeEach(() => {
     todoListId1 = v1()
     todoListId2 = v1()
     startState = [
-        {id: todoListId1, title: 'What to learn', filter: 'all'},
-        {id: todoListId2, title: 'What to buy', filter: 'all'}
+        {id: todoListId1, title: 'What to learn', filter: 'all', addedDate: '', order: 0},
+        {id: todoListId2, title: 'What to buy', filter: 'all', addedDate: '', order: 0}
     ]
 })
 

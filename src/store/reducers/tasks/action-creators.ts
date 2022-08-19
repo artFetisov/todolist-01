@@ -1,4 +1,5 @@
 import {AddTaskAction, ChangeTaskStatusAction, ChangeTaskTitleAction, RemoveTaskAction, TasksActionEnum} from "./types";
+import {TaskStatuses} from "../../../types/task.types";
 
 export const TasksActionCreators = {
     removeTask: (todoListId: string, taskId: string): RemoveTaskAction => ({
@@ -9,7 +10,7 @@ export const TasksActionCreators = {
         type: TasksActionEnum.ADD_TASK,
         payload: {todoListId, taskTitle}
     }),
-    changeTaskStatus: (todoListId: string, taskId: string, status: boolean): ChangeTaskStatusAction => ({
+    changeTaskStatus: (todoListId: string, taskId: string, status: TaskStatuses): ChangeTaskStatusAction => ({
         type: TasksActionEnum.CHANGE_TASK_STATUS,
         payload: {todoListId, taskId, status}
     }),

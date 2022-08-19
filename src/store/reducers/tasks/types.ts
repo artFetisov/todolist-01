@@ -1,8 +1,8 @@
-import {ITodoItem} from "../../../components/ui/todolist/todolist.types";
 import {AddTodoListAction, RemoveTodoListAction} from "../todolists/types";
+import {ITask, TaskStatuses} from "../../../types/task.types";
 
 export interface ITasksState {
-    [key: string]: ITodoItem[]
+    [key: string]: ITask[]
 }
 
 export enum TasksActionEnum {
@@ -35,7 +35,7 @@ export interface ChangeTaskStatusAction {
     payload: {
         todoListId: string,
         taskId: string,
-        status: boolean
+        status: TaskStatuses
     }
 
 }

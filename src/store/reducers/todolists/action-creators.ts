@@ -5,8 +5,8 @@ import {
     RemoveTodoListAction,
     TodoListActionEnum
 } from "./types";
-import {FilterValuesType} from "../../../components/ui/todolist/todolist.types";
 import {v1} from "uuid";
+import {FilterValuesType} from "../../../types/todo-list.types";
 
 
 export const TodoListsActionCreators = {

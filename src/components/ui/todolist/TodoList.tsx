@@ -1,20 +1,26 @@
 import React, {FC, MouseEvent, useCallback, useMemo} from "react";
-import {ITodoItem} from "./todolist.types";
 import {TodoListItem} from "./TodoListItem";
-import {FilterValuesType} from './todolist.types'
 import {AddItemForm} from "./AddItemForm";
 import {btnTitles} from "./todolist.data";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Card, Typography} from "@mui/material";
 import {TasksActionCreators} from "../../../store/reducers/tasks/action-creators";
-import {useDispatch} from "react-redux";
+import {useDispatch,} from "react-redux";
 import {TodoListsActionCreators} from "../../../store/reducers/todolists/action-creators";
+import {useTypedSelector} from "../../../hooks/useTypedSelector";
+import {FilterValuesType} from "../../../types/todo-list.types";
+import {ITask, TaskStatuses} from "../../../types/task.types";
 
 interface ITodoListProps {
     todoListId: string
     title: string
     filter: FilterValuesType
-    tasks: ITodoItem[]
+}
+
+function filteredTasksHandler(tasks: ITask[], filter: FilterValuesType): ITask[] {
+    if (filter === 'completed') return tasks.filter(t => t.status === TaskStatuses.COMPLETED)
+    else if (filter === 'active') return tasks.filter(t => t.status === TaskStatuses.NEW)
+    else return tasks
 }
 
 export const TodoList: FC<ITodoListProps> = React.memo((
@@ -22,10 +28,10 @@ export const TodoList: FC<ITodoListProps> = React.memo((
         todoListId,
         title,
         filter,
-        tasks
     }
 ) => {
     const dispatch = useDispatch()
+    const tasks = useTypedSelector(state => state.tasks[todoListId])
 
     console.log('todoList is  render', todoListId, title)
 
@@ -44,12 +50,6 @@ export const TodoList: FC<ITodoListProps> = React.memo((
     const changeListTitleHandler = useCallback((title: string) => {
         dispatch(TodoListsActionCreators.changeTodoListTitle(todoListId, title))
     }, [todoListId, dispatch])
-
-    function filteredTasksHandler(tasks: ITodoItem[], filter: FilterValuesType): ITodoItem[] {
-        if (filter === 'completed') return tasks.filter(t => t.isDone)
-        else if (filter === 'active') return tasks.filter(t => !t.isDone)
-        else return tasks
-    }
 
     const filteredTasks = useMemo(() => filteredTasksHandler(tasks, filter), [filter, tasks])
 

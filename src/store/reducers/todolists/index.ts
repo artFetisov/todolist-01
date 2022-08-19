@@ -1,16 +1,18 @@
-import {ITodoListState, TodoListActionEnum, TodoListActions} from "./types";
+import {TodoListActionEnum, TodoListActions, TodoListStateType} from "./types";
 import {todoListsData} from "../../../components/ui/todolist/todolist.data";
 
-const initialState: ITodoListState[] = todoListsData
+const initialState: TodoListStateType[] = todoListsData
 
-export default function todoListsReducer(state: ITodoListState[] = initialState, action: TodoListActions): ITodoListState[] {
+export default function todoListsReducer(state: TodoListStateType[] = initialState, action: TodoListActions): TodoListStateType[] {
     switch (action.type) {
 
         case TodoListActionEnum.ADD_TODO_LIST:
-            const newTodoList: ITodoListState = {
+            const newTodoList: TodoListStateType = {
                 id: action.payload.todoListId,
                 title: action.payload.newTodoListTitle,
-                filter: 'all'
+                filter: 'all',
+                addedDate: '',
+                order: 0
             }
             return [newTodoList, ...state]
 
