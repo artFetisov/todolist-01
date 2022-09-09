@@ -1,20 +1,22 @@
-import React, {FC, MouseEvent, useCallback, useMemo} from "react";
+import React, {FC, MouseEvent, useCallback, useEffect, useMemo} from "react";
 import {TodoListItem} from "./TodoListItem";
 import {AddItemForm} from "./AddItemForm";
 import {btnTitles} from "./todolist.data";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Card, Typography} from "@mui/material";
-import {TasksActionCreators} from "../../../store/reducers/tasks/action-creators";
+import {TasksThunkCreators} from "../../../store/reducers/tasks/action-creators";
 import {useDispatch,} from "react-redux";
-import {TodoListsActionCreators} from "../../../store/reducers/todolists/action-creators";
+import {TodoListsActionCreators, TodoListsThunksCreators} from "../../../store/reducers/todolists/action-creators";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import {FilterValuesType} from "../../../types/todo-list.types";
 import {ITask, TaskStatuses} from "../../../types/task.types";
+import {RequestStatusType} from "../../../types/app.types";
 
 interface ITodoListProps {
     todoListId: string
     title: string
     filter: FilterValuesType
+    listStatus: RequestStatusType
 }
 
 function filteredTasksHandler(tasks: ITask[], filter: FilterValuesType): ITask[] {
@@ -28,15 +30,21 @@ export const TodoList: FC<ITodoListProps> = React.memo((
         todoListId,
         title,
         filter,
+        listStatus
     }
 ) => {
     const dispatch = useDispatch()
     const tasks = useTypedSelector(state => state.tasks[todoListId])
+    const isDisabled = listStatus === 'loading'
 
-    console.log('todoList is  render', todoListId, title)
+    useEffect(() => {
+        // @ts-ignore
+        dispatch(TasksThunkCreators.fetchTasks(todoListId))
+    }, [])
 
     const addItem = useCallback((title: string) => {
-        dispatch(TasksActionCreators.addTask(todoListId, title))
+        // @ts-ignore
+        dispatch(TasksThunkCreators.createTask(todoListId, title))
     }, [todoListId, dispatch])
 
     function onSetFilter(e: MouseEvent<HTMLButtonElement>) {
@@ -44,23 +52,27 @@ export const TodoList: FC<ITodoListProps> = React.memo((
     }
 
     function onRemoveTodoList() {
-        dispatch(TodoListsActionCreators.removeTodoList(todoListId))
+        // @ts-ignore
+        dispatch(TodoListsThunksCreators.removeTodoList(todoListId))
     }
 
     const changeListTitleHandler = useCallback((title: string) => {
-        dispatch(TodoListsActionCreators.changeTodoListTitle(todoListId, title))
+        // @ts-ignore
+        dispatch(TodoListsThunksCreators.changeTitleTodoList(todoListId, title))
     }, [todoListId, dispatch])
 
     const filteredTasks = useMemo(() => filteredTasksHandler(tasks, filter), [filter, tasks])
 
     return <div style={{marginTop: '50px'}}>
         <div style={{display: 'flex', alignItems: 'start', justifyContent: 'space-between'}}>
-            <EditableSpan title={title} changeTitleHandler={changeListTitleHandler} isHeading/>
-            <Button onClick={onRemoveTodoList} color={'error'} variant="contained">Delete list</Button>
+            <EditableSpan title={title} changeTitleHandler={changeListTitleHandler} isHeading isDisabled={isDisabled}/>
+            <Button onClick={onRemoveTodoList} color={'error'} variant="contained" disabled={isDisabled}>Delete
+                list</Button>
         </div>
         <AddItemForm
             addItem={addItem}
             placeholder={'Add new task'}
+            isDisabled={isDisabled}
         />
         <Card>
             <ul>

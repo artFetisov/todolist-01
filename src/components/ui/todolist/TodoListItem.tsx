@@ -3,7 +3,7 @@ import styles from './TodoList.module.css'
 import {EditableSpan} from "./EditableSpan";
 import {Checkbox, IconButton} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import {TasksActionCreators} from "../../../store/reducers/tasks/action-creators";
+import {TasksActionCreators, TasksThunkCreators} from "../../../store/reducers/tasks/action-creators";
 import {useDispatch} from "react-redux";
 import {ITask, TaskStatuses} from "../../../types/task.types";
 
@@ -21,19 +21,22 @@ export const TodoListItem: FC<ITaskProps> = React.memo((
     console.log('todoList Item is render')
 
     function onRemoveHandler() {
-        dispatch(TasksActionCreators.removeTask(todoListId, task.id))
+        // @ts-ignore
+        dispatch(TasksThunkCreators.removeTask(todoListId, task.id))
     }
 
-    function onChangeHandler(e: ChangeEvent<HTMLInputElement>) {
-        dispatch(TasksActionCreators.changeTaskStatus(todoListId, task.id, !!e.currentTarget.checked ? TaskStatuses.COMPLETED : TaskStatuses.NEW))
+    function onChangeStatus(e: ChangeEvent<HTMLInputElement>) {
+        // @ts-ignore
+        dispatch(TasksThunkCreators.updateTask(todoListId, task.id, {status: !!e.currentTarget.checked ? TaskStatuses.COMPLETED : TaskStatuses.NEW}))
     }
 
     const changeTaskTitleHandler = useCallback((title: string) => {
-        dispatch(TasksActionCreators.changeTaskTitle(todoListId, task.id, title))
+        // @ts-ignore
+        dispatch(TasksThunkCreators.updateTask(todoListId, task.id, {title}))
     }, [todoListId, task.id, dispatch])
 
     return <li className={task.status === TaskStatuses.COMPLETED ? styles.isDone : ''}>
-        <Checkbox checked={task.status === TaskStatuses.COMPLETED} onChange={onChangeHandler} size={"small"}/>
+        <Checkbox checked={task.status === TaskStatuses.COMPLETED} onChange={onChangeStatus} size={"small"}/>
         <EditableSpan title={task.title} changeTitleHandler={changeTaskTitleHandler}/>
         <IconButton onClick={onRemoveHandler} color={"error"} style={{marginLeft: 'auto'}}>
             <DeleteIcon/>

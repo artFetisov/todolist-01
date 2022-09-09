@@ -1,18 +1,15 @@
 import {TodoListActionEnum, TodoListActions, TodoListStateType} from "./types";
-import {todoListsData} from "../../../components/ui/todolist/todolist.data";
 
-const initialState: TodoListStateType[] = todoListsData
+const initialState: TodoListStateType[] = []
 
 export default function todoListsReducer(state: TodoListStateType[] = initialState, action: TodoListActions): TodoListStateType[] {
     switch (action.type) {
 
         case TodoListActionEnum.ADD_TODO_LIST:
             const newTodoList: TodoListStateType = {
-                id: action.payload.todoListId,
-                title: action.payload.newTodoListTitle,
+                ...action.payload.newTodoList,
                 filter: 'all',
-                addedDate: '',
-                order: 0
+                listStatus: 'idle'
             }
             return [newTodoList, ...state]
 
@@ -30,6 +27,19 @@ export default function todoListsReducer(state: TodoListStateType[] = initialSta
 
         case TodoListActionEnum.REMOVE_TODO_LIST:
             return state.filter(list => list.id !== action.payload.todoListID)
+
+        case TodoListActionEnum.SET_TODO_LISTS:
+            return action.payload.todoLists.map(tl => ({
+                ...tl,
+                filter: 'all',
+                listStatus: 'idle'
+            }))
+
+        case TodoListActionEnum.SET_LIST_STATUS:
+            return state.map(tl => tl.id === action.payload.todoListId ? {
+                ...tl,
+                listStatus: action.payload.status
+            } : tl)
 
         default:
             return state

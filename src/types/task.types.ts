@@ -3,11 +3,10 @@ export interface ITasks {
 }
 
 export interface IUpdateTaskModel {
-    title: string
+    title?: string
     description: string
-    completed: boolean
-    status: number
-    priority: number
+    status?: TaskStatuses
+    priority: TaskPriorities
     startDate: string | null
     deadline: string | null
 }
@@ -29,9 +28,8 @@ export enum TaskPriorities {
 
 
 export interface ITask {
-    description: string | null
+    description: string
     title: string
-    completed: boolean
     status: TaskStatuses
     priority: TaskPriorities
     startDate: string | null

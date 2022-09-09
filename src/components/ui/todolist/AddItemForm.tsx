@@ -4,11 +4,10 @@ import {Button, Grid, TextField} from "@mui/material";
 interface IAddItemFormProps {
     addItem: (title: string) => void
     placeholder?: string
+    isDisabled?: boolean
 }
 
-export const AddItemForm: FC<IAddItemFormProps> = React.memo(({addItem, placeholder}) => {
-    console.log('render AddItemForm')
-
+export const AddItemForm: FC<IAddItemFormProps> = React.memo(({addItem, placeholder, isDisabled}) => {
     const [newTaskTitle, setNewTaskTitle] = useState<string>('')
     const [error, setError] = useState<string>('')
     const isError = error.length > 0
@@ -35,6 +34,7 @@ export const AddItemForm: FC<IAddItemFormProps> = React.memo(({addItem, placehol
 
     return <Grid style={{margin: '30px'}}>
         <TextField
+            disabled={isDisabled}
             error={isError}
             id="outlined-basic"
             label={placeholder}
@@ -48,10 +48,11 @@ export const AddItemForm: FC<IAddItemFormProps> = React.memo(({addItem, placehol
             style={{marginRight: '10px'}}
         />
         <Button
+
             variant="contained"
             color="success"
             onClick={addTaskHandler}
-            disabled={isError}
+            disabled={isError || isDisabled}
             size={"medium"}
             style={{margin: 'auto'}}
         >

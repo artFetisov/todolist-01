@@ -3,8 +3,8 @@ import {TodoListType} from "../../../types/todo-list.types";
 import {ITask, ITasks, TaskPriorities, TaskStatuses} from "../../../types/task.types";
 
 export const todoListsData: TodoListType[] = [
-    {id: v1(), title: 'What to learn', filter: 'all', addedDate: '', order: 0},
-    {id: v1(), title: 'What to buy', filter: 'all', addedDate: '', order: 0},
+    {id: v1(), title: 'What to learn', filter: 'all', addedDate: '', order: 0, listStatus: 'idle'},
+    {id: v1(), title: 'What to buy', filter: 'all', addedDate: '', order: 0, listStatus: 'idle'},
 ]
 
 export const tasks1: ITask[][] = [[
@@ -13,7 +13,6 @@ export const tasks1: ITask[][] = [[
         title: 'JS',
         status: TaskStatuses.NEW,
         description: '',
-        completed: false,
         priority: TaskPriorities.MIDDLE,
         startDate: '',
         deadline: '',
@@ -23,7 +22,6 @@ export const tasks1: ITask[][] = [[
     },
     {
         id: v1(), title: 'TS', status: TaskStatuses.NEW, description: '',
-        completed: false,
         priority: TaskPriorities.MIDDLE,
         startDate: '',
         deadline: '',
@@ -33,7 +31,6 @@ export const tasks1: ITask[][] = [[
     },
     {
         id: v1(), title: 'NODEJS', status: TaskStatuses.NEW, description: '',
-        completed: false,
         priority: TaskPriorities.MIDDLE,
         startDate: '',
         deadline: '',
@@ -43,7 +40,6 @@ export const tasks1: ITask[][] = [[
     },
     {
         id: v1(), title: 'SCSS', status: TaskStatuses.NEW, description: '',
-        completed: false,
         priority: TaskPriorities.MIDDLE,
         startDate: '',
         deadline: '',
@@ -53,7 +49,6 @@ export const tasks1: ITask[][] = [[
     },
     {
         id: v1(), title: 'SASS', status: TaskStatuses.NEW, description: '',
-        completed: false,
         priority: TaskPriorities.MIDDLE,
         startDate: '',
         deadline: '',
@@ -64,7 +59,6 @@ export const tasks1: ITask[][] = [[
 ], [
     {
         id: v1(), title: 'milk', status: TaskStatuses.NEW, description: '',
-        completed: false,
         priority: TaskPriorities.MIDDLE,
         startDate: '',
         deadline: '',
@@ -74,7 +68,6 @@ export const tasks1: ITask[][] = [[
     },
     {
         id: v1(), title: 'sugar', status: TaskStatuses.NEW, description: '',
-        completed: false,
         priority: TaskPriorities.MIDDLE,
         startDate: '',
         deadline: '',
@@ -84,7 +77,6 @@ export const tasks1: ITask[][] = [[
     },
     {
         id: v1(), title: 'bread', status: TaskStatuses.NEW, description: '',
-        completed: false,
         priority: TaskPriorities.MIDDLE,
         startDate: '',
         deadline: '',

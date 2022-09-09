@@ -1,4 +1,6 @@
-export interface ITodoList {
+import {RequestStatusType} from "./app.types";
+
+export interface ITodoListFetch {
     id: string
     addedDate: string
     order: number
@@ -7,6 +9,7 @@ export interface ITodoList {
 
 export type FilterValuesType = 'all' | 'active' | 'completed'
 
-export type TodoListType = ITodoList & {
+export type TodoListType = ITodoListFetch & {
     filter: FilterValuesType
+    listStatus: RequestStatusType
 }

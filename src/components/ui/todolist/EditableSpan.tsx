@@ -5,9 +5,10 @@ interface IEditableSpanProps {
     title: string
     changeTitleHandler: (title: string) => void
     isHeading?: boolean
+    isDisabled?: boolean
 }
 
-export const EditableSpan: FC<IEditableSpanProps> = React.memo(({title, changeTitleHandler, isHeading}) => {
+export const EditableSpan: FC<IEditableSpanProps> = React.memo(({title, changeTitleHandler, isHeading, isDisabled}) => {
     const [editMode, setEditMode] = useState(false)
     const [newTitle, setNewTitle] = useState('')
 
@@ -41,6 +42,7 @@ export const EditableSpan: FC<IEditableSpanProps> = React.memo(({title, changeTi
                 onChange={onChangeTitleHandler}
                 value={newTitle}
                 variant="standard"
+                disabled={isDisabled}
             />
             : <Typography variant="h4" gutterBottom component="span" onDoubleClick={setEditModeHandler}>
                 {title}
@@ -54,6 +56,7 @@ export const EditableSpan: FC<IEditableSpanProps> = React.memo(({title, changeTi
             onChange={onChangeTitleHandler}
             value={newTitle}
             variant="standard"
+            disabled={isDisabled}
         />
         : <Typography variant="overline" onDoubleClick={setEditModeHandler}>{title}</Typography>
 })
