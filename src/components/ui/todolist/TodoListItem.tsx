@@ -3,9 +3,9 @@ import styles from './TodoList.module.css'
 import {EditableSpan} from "./EditableSpan";
 import {Checkbox, IconButton} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import {TasksActionCreators, TasksThunkCreators} from "../../../store/reducers/tasks/action-creators";
-import {useDispatch} from "react-redux";
+import {TasksThunkCreators} from "../../../store/reducers/tasks/action-creators";
 import {ITask, TaskStatuses} from "../../../types/task.types";
+import {useTypedDispatch} from "../../../hooks/useTypedDispatch";
 
 interface ITaskProps {
     task: ITask
@@ -17,21 +17,17 @@ export const TodoListItem: FC<ITaskProps> = React.memo((
         task,
         todoListId,
     }) => {
-    const dispatch = useDispatch()
-    console.log('todoList Item is render')
+    const dispatch = useTypedDispatch()
 
     function onRemoveHandler() {
-        // @ts-ignore
         dispatch(TasksThunkCreators.removeTask(todoListId, task.id))
     }
 
     function onChangeStatus(e: ChangeEvent<HTMLInputElement>) {
-        // @ts-ignore
         dispatch(TasksThunkCreators.updateTask(todoListId, task.id, {status: !!e.currentTarget.checked ? TaskStatuses.COMPLETED : TaskStatuses.NEW}))
     }
 
     const changeTaskTitleHandler = useCallback((title: string) => {
-        // @ts-ignore
         dispatch(TasksThunkCreators.updateTask(todoListId, task.id, {title}))
     }, [todoListId, task.id, dispatch])
 

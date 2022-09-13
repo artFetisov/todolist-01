@@ -12,8 +12,6 @@ export const EditableSpan: FC<IEditableSpanProps> = React.memo(({title, changeTi
     const [editMode, setEditMode] = useState(false)
     const [newTitle, setNewTitle] = useState('')
 
-    console.log('editSpan is render')
-
     function setEditModeHandler() {
         setNewTitle(title)
         setEditMode(true)

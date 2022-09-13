@@ -3,26 +3,22 @@ import {TodoList} from "../../ui/todolist/TodoList";
 import {AddItemForm} from "../../ui/todolist/AddItemForm";
 import {Container, Grid, LinearProgress} from "@mui/material";
 import {TodoListsThunksCreators} from "../../../store/reducers/todolists/action-creators";
-import {useDispatch} from "react-redux";
 import {NavBar} from "../../ui/navbar/NavBar";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import {CustomizedSnackBar} from "../../ui/snack-bar/SnackBar";
 import styles from '../../../App.module.scss';
+import {useTypedDispatch} from "../../../hooks/useTypedDispatch";
 
 export const Home: FC = () => {
-    const dispatch = useDispatch()
+    const dispatch = useTypedDispatch()
     const status = useTypedSelector(state => state.app.status)
     const todoLists = useTypedSelector(state => state.todoLists)
 
     useEffect(() => {
-        // @ts-ignore
         dispatch(TodoListsThunksCreators.fetchTodoLists())
     }, [])
 
-    console.log('Home is render')
-
     const addTodoList = useCallback((title: string) => {
-        // @ts-ignore
         dispatch(TodoListsThunksCreators.createTodoList(title))
     }, [dispatch])
 

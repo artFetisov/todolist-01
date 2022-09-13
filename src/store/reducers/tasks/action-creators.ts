@@ -6,10 +6,10 @@ import {
 } from "./types";
 import {ITask, IUpdateTaskModel, TaskStatuses} from "../../../types/task.types";
 import {TasksService} from "../../../services/tasks.service";
-import {Dispatch} from "redux";
-import {AppRootState} from "../../index";
+import {AppRootState, AppRootThunk} from "../../index";
 import {AppActionCreators} from "../app/action-creators";
-import {TodoListsActionCreators, TodoListsThunksCreators} from "../todolists/action-creators";
+import {TodoListsActionCreators} from "../todolists/action-creators";
+import {handleNetworkError} from "../../../utils/handleNetworkError";
 
 export const TasksActionCreators = {
     removeTask: (todoListId: string, taskId: string): RemoveTaskAction => ({
@@ -35,21 +35,26 @@ export const TasksActionCreators = {
 }
 
 export const TasksThunkCreators = {
-    fetchTasks: (todoListId: string) => async (dispatch: Dispatch) => {
+    fetchTasks: (todoListId: string): AppRootThunk => async dispatch => {
         try {
             dispatch(AppActionCreators.setAppStatus('loading'))
             const response = await TasksService.getAll(todoListId)
-            dispatch(TasksActionCreators.setTasks(todoListId, response.data.items))
-            dispatch(AppActionCreators.setAppStatus('succeeded'))
+            if (response.data.error === null) {
+                dispatch(TasksActionCreators.setTasks(todoListId, response.data.items))
+                dispatch(AppActionCreators.setAppStatus('succeeded'))
+            }
         } catch (error) {
-            console.log(error)
+            if (error instanceof Error) {
+                handleNetworkError(error.message, dispatch, todoListId)
+            }
         }
     },
-    createTask: (todolistId: string, title: string) => async (dispatch: Dispatch) => {
+    createTask: (todoListId: string, title: string): AppRootThunk => async dispatch => {
         try {
-            dispatch(TodoListsActionCreators.setListStatus(todolistId, 'loading'))
+            dispatch(TodoListsActionCreators.setListStatus(todoListId, 'loading'))
             dispatch(AppActionCreators.setAppStatus('loading'))
-            const response = await TasksService.create(todolistId, title)
+            const response = await TasksService.create(todoListId, title)
+
             if (response.data.resultCode === 0) {
                 dispatch(TasksActionCreators.addTask(response.data.data.item))
             } else {
@@ -57,23 +62,33 @@ export const TasksThunkCreators = {
                 dispatch(AppActionCreators.setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
             }
             dispatch(AppActionCreators.setAppStatus('succeeded'))
-            dispatch(TodoListsActionCreators.setListStatus(todolistId, 'succeeded'))
+            dispatch(TodoListsActionCreators.setListStatus(todoListId, 'succeeded'))
         } catch (error) {
-            console.log(error)
+            if (error instanceof Error) {
+                handleNetworkError(error.message, dispatch, todoListId)
+            }
         }
     },
-    removeTask: (todoListId: string, taskId: string) => async (dispatch: Dispatch) => {
+    removeTask: (todoListId: string, taskId: string): AppRootThunk => async dispatch => {
         try {
             dispatch(AppActionCreators.setAppStatus('loading'))
             const response = await TasksService.delete(todoListId, taskId)
-            dispatch(TasksActionCreators.removeTask(todoListId, taskId))
+
+            if (response.data.resultCode === 0) {
+                dispatch(TasksActionCreators.removeTask(todoListId, taskId))
+            } else {
+                const errMessages = response.data.messages
+                dispatch(AppActionCreators.setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
+            }
             dispatch(AppActionCreators.setAppStatus('succeeded'))
         } catch (error) {
-            console.log(error)
+            if (error instanceof Error) {
+                handleNetworkError(error.message, dispatch, todoListId)
+            }
         }
     },
-    updateTask: (todoListId: string, taskId: string, newObj: { status: TaskStatuses } | { title: string }) =>
-        async (dispatch: Dispatch, getState: () => AppRootState) => {
+    updateTask: (todoListId: string, taskId: string, newObj: { status: TaskStatuses } | { title: string }): AppRootThunk =>
+        async (dispatch, getState: () => AppRootState) => {
             try {
                 dispatch(AppActionCreators.setAppStatus('loading'))
                 const task = getState().tasks[todoListId].find(t => t.id === taskId)
@@ -90,10 +105,18 @@ export const TasksThunkCreators = {
                     ...newObj
                 }
                 const response = await TasksService.update(todoListId, taskId, model)
-                dispatch(TasksActionCreators.changeTask(response.data.data.item))
+
+                if (response.data.resultCode === 0) {
+                    dispatch(TasksActionCreators.changeTask(response.data.data.item))
+                } else {
+                    const errMessages = response.data.messages
+                    dispatch(AppActionCreators.setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
+                }
                 dispatch(AppActionCreators.setAppStatus('succeeded'))
             } catch (error) {
-                console.log(error)
+                if (error instanceof Error) {
+                    handleNetworkError(error.message, dispatch, todoListId)
+                }
             }
         }
 }

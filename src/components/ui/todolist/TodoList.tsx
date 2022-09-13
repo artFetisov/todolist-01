@@ -5,12 +5,12 @@ import {btnTitles} from "./todolist.data";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Card, Typography} from "@mui/material";
 import {TasksThunkCreators} from "../../../store/reducers/tasks/action-creators";
-import {useDispatch,} from "react-redux";
 import {TodoListsActionCreators, TodoListsThunksCreators} from "../../../store/reducers/todolists/action-creators";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import {FilterValuesType} from "../../../types/todo-list.types";
 import {ITask, TaskStatuses} from "../../../types/task.types";
 import {RequestStatusType} from "../../../types/app.types";
+import {useTypedDispatch} from "../../../hooks/useTypedDispatch";
 
 interface ITodoListProps {
     todoListId: string
@@ -33,17 +33,15 @@ export const TodoList: FC<ITodoListProps> = React.memo((
         listStatus
     }
 ) => {
-    const dispatch = useDispatch()
+    const dispatch = useTypedDispatch()
     const tasks = useTypedSelector(state => state.tasks[todoListId])
     const isDisabled = listStatus === 'loading'
 
     useEffect(() => {
-        // @ts-ignore
         dispatch(TasksThunkCreators.fetchTasks(todoListId))
     }, [])
 
     const addItem = useCallback((title: string) => {
-        // @ts-ignore
         dispatch(TasksThunkCreators.createTask(todoListId, title))
     }, [todoListId, dispatch])
 
@@ -52,12 +50,10 @@ export const TodoList: FC<ITodoListProps> = React.memo((
     }
 
     function onRemoveTodoList() {
-        // @ts-ignore
         dispatch(TodoListsThunksCreators.removeTodoList(todoListId))
     }
 
     const changeListTitleHandler = useCallback((title: string) => {
-        // @ts-ignore
         dispatch(TodoListsThunksCreators.changeTitleTodoList(todoListId, title))
     }, [todoListId, dispatch])
 

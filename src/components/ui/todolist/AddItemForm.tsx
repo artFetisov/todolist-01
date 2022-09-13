@@ -48,7 +48,6 @@ export const AddItemForm: FC<IAddItemFormProps> = React.memo(({addItem, placehol
             style={{marginRight: '10px'}}
         />
         <Button
-
             variant="contained"
             color="success"
             onClick={addTaskHandler}

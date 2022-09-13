@@ -7,10 +7,11 @@ import {
     TodoListActionEnum
 } from "./types";
 import {FilterValuesType, ITodoListFetch} from "../../../types/todo-list.types";
-import {Dispatch} from "redux";
 import {TodoListsService} from "../../../services/todo-lists.service";
 import {AppActionCreators} from "../app/action-creators";
 import {RequestStatusType} from "../../../types/app.types";
+import {AppRootThunk} from "../../index";
+import {handleNetworkError} from "../../../utils/handleNetworkError";
 
 export const TodoListsActionCreators = {
     removeTodoList: (todoListID: string): RemoveTodoListAction => ({
@@ -43,48 +44,72 @@ export const TodoListsActionCreators = {
 }
 
 export const TodoListsThunksCreators = {
-    fetchTodoLists: () => async (dispatch: Dispatch) => {
+    fetchTodoLists: (): AppRootThunk => async dispatch => {
         try {
             dispatch(AppActionCreators.setAppStatus('loading'))
             const response = await TodoListsService.getAll()
             dispatch(TodoListsActionCreators.setTodoLists(response.data))
             dispatch(AppActionCreators.setAppStatus('succeeded'))
         } catch (error) {
-            console.log(error)
+            if (error instanceof Error) {
+                handleNetworkError(error.message, dispatch)
+            }
         }
     },
-    removeTodoList: (todoListId: string) => async (dispatch: Dispatch) => {
+    removeTodoList: (todoListId: string): AppRootThunk => async dispatch => {
         try {
             dispatch(TodoListsActionCreators.setListStatus(todoListId, 'loading'))
             dispatch(AppActionCreators.setAppStatus('loading'))
             const response = await TodoListsService.delete(todoListId)
-            dispatch(TodoListsActionCreators.removeTodoList(todoListId))
+            if (response.data.resultCode === 0) {
+                dispatch(TodoListsActionCreators.removeTodoList(todoListId))
+            } else {
+                const errMessages = response.data.messages
+                dispatch(AppActionCreators.setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
+            }
             dispatch(AppActionCreators.setAppStatus('succeeded'))
         } catch (error) {
-            console.log(error)
+            if (error instanceof Error) {
+                handleNetworkError(error.message, dispatch, todoListId)
+            }
         }
     },
-    createTodoList: (title: string) => async (dispatch: Dispatch) => {
+    createTodoList: (title: string): AppRootThunk => async dispatch => {
         try {
             dispatch(AppActionCreators.setAppStatus('loading'))
             const response = await TodoListsService.create(title)
-            dispatch(TodoListsActionCreators.addTodoList(response.data.data.item))
+
+            if (response.data.resultCode === 0) {
+                dispatch(TodoListsActionCreators.addTodoList(response.data.data.item))
+            } else {
+                const errMessages = response.data.messages
+                dispatch(AppActionCreators.setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
+            }
             dispatch(AppActionCreators.setAppStatus('succeeded'))
         } catch (error) {
-            dispatch(AppActionCreators.setAppStatus('failed'))
-            console.log(error)
+            if (error instanceof Error) {
+                handleNetworkError(error.message, dispatch)
+            }
         }
     },
-    changeTitleTodoList: (todoListId: string, title: string) => async (dispatch: Dispatch) => {
+    changeTitleTodoList: (todoListId: string, title: string): AppRootThunk => async dispatch => {
         try {
             dispatch(TodoListsActionCreators.setListStatus(todoListId, 'loading'))
             dispatch(AppActionCreators.setAppStatus('loading'))
             const response = await TodoListsService.update(todoListId, title)
-            dispatch(TodoListsActionCreators.changeTodoListTitle(todoListId, title))
+
+            if (response.data.resultCode === 0) {
+                dispatch(TodoListsActionCreators.changeTodoListTitle(todoListId, title))
+            } else {
+                const errMessages = response.data.messages
+                dispatch(AppActionCreators.setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
+            }
             dispatch(AppActionCreators.setAppStatus('succeeded'))
             dispatch(TodoListsActionCreators.setListStatus(todoListId, 'succeeded'))
         } catch (error) {
-            console.log(error)
+            if (error instanceof Error) {
+                handleNetworkError(error.message, dispatch, todoListId)
+            }
         }
     }
 }

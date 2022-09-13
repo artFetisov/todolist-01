@@ -31,7 +31,7 @@ export const CustomizedSnackBar: FC = () => {
 
     return (
         <Stack spacing={6} sx={{width: '100%'}}>
-            <Snackbar open={isOpen} autoHideDuration={6000} onClose={handleClose}
+            <Snackbar open={isOpen} autoHideDuration={3000} onClose={handleClose}
                       anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
             >
                 <Alert onClose={handleClose} severity="error" sx={{width: '100%'}}>
