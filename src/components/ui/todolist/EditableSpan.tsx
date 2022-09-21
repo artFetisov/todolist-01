@@ -13,8 +13,10 @@ export const EditableSpan: FC<IEditableSpanProps> = React.memo(({title, changeTi
     const [newTitle, setNewTitle] = useState('')
 
     function setEditModeHandler() {
-        setNewTitle(title)
-        setEditMode(true)
+        if (!isDisabled) {
+            setNewTitle(title)
+            setEditMode(true)
+        }
     }
 
     function changeTitle() {

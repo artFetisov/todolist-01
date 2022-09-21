@@ -18,7 +18,8 @@ TaskIsDone.args = {
     task: {
         id: '1', status: TaskStatuses.COMPLETED, title: 'JS', description: '',
         priority: TaskPriorities.MIDDLE, startDate: '', deadline: '',
-        todoListId: '', order: 0, addedDate: ''
+        todoListId: '', order: 0, addedDate: '',
+        entityStatus: 'idle'
     }
 };
 
@@ -28,7 +29,7 @@ TaskIsNotDone.args = {
     task: {
         id: '1', status: TaskStatuses.NEW, title: 'TS', description: '',
         priority: TaskPriorities.MIDDLE, startDate: '', deadline: '',
-        todoListId: '', order: 0, addedDate: ''
+        todoListId: '', order: 0, addedDate: '', entityStatus: 'idle'
     }
 };
 

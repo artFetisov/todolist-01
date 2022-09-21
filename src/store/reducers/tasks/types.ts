@@ -1,5 +1,6 @@
 import {AddTodoListAction, RemoveTodoListAction, SetTodoListsAction} from "../todolists/types";
 import {ITask, TaskStatuses} from "../../../types/task.types";
+import {RequestStatusType} from "../../../types/app.types";
 
 export interface ITasksState {
     [key: string]: ITask[]
@@ -9,7 +10,8 @@ export enum TasksActionEnum {
     REMOVE_TASK = 'REMOVE-TASK',
     ADD_TASK = 'ADD-TASK',
     CHANGE_TASK = 'CHANGE-TASK',
-    SET_TASKS = 'SET-TASKS'
+    SET_TASKS = 'SET-TASKS',
+    SET_ENTITY_STATUS = 'SET-ENTITY-STATUS'
 }
 
 export interface SetTasksAction {
@@ -17,6 +19,15 @@ export interface SetTasksAction {
     payload: {
         tasks: ITask[],
         todoListId: string
+    }
+}
+
+export interface SetEntityStatusAction {
+    type: TasksActionEnum.SET_ENTITY_STATUS,
+    payload: {
+        todoListId: string,
+        taskId: string,
+        entityStatus: RequestStatusType
     }
 }
 
@@ -53,3 +64,4 @@ export type TasksActions =
     | RemoveTodoListAction
     | SetTodoListsAction
     | SetTasksAction
+    | SetEntityStatusAction

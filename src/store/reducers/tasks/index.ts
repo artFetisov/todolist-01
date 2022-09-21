@@ -1,7 +1,5 @@
-import {v1} from "uuid";
 import {ITasksState, TasksActionEnum, TasksActions} from "./types";
 import {TodoListActionEnum} from "../todolists/types";
-import {ITask, TaskPriorities, TaskStatuses} from "../../../types/task.types";
 
 const initialState: ITasksState = {}
 
@@ -12,7 +10,7 @@ export default function tasksReducer(state: ITasksState = initialState, action: 
                 ...state,
                 [action.payload.task.todoListId]: [action.payload.task, ...state[action.payload.task.todoListId]]
             }
-            
+
         case TasksActionEnum.CHANGE_TASK:
             return {
                 ...state,
@@ -41,6 +39,14 @@ export default function tasksReducer(state: ITasksState = initialState, action: 
             const stateCopy = {...state}
             action.payload.todoLists.forEach(tl => stateCopy[tl.id] = [])
             return stateCopy
+
+        case TasksActionEnum.SET_ENTITY_STATUS:
+            return {
+                ...state,
+                [action.payload.todoListId]: state[action.payload.todoListId].map(t => t.id === action.payload.taskId
+                    ? {...t, entityStatus: action.payload.entityStatus}
+                    : t)
+            }
 
         case TasksActionEnum.SET_TASKS:
             return {

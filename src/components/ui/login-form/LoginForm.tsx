@@ -50,7 +50,7 @@ export const LoginForm: FC = () => {
                         }
                     })}
                 id="password"
-                // type={'password'}
+                type={'password'}
                 error={!!errors.password}
                 label={'password'}
                 variant="outlined"

@@ -18,6 +18,7 @@ export const TodoListItem: FC<ITaskProps> = React.memo((
         todoListId,
     }) => {
     const dispatch = useTypedDispatch()
+    const isDisabled = task.entityStatus === 'loading'
 
     function onRemoveHandler() {
         dispatch(TasksThunkCreators.removeTask(todoListId, task.id))
@@ -32,9 +33,10 @@ export const TodoListItem: FC<ITaskProps> = React.memo((
     }, [todoListId, task.id, dispatch])
 
     return <li className={task.status === TaskStatuses.COMPLETED ? styles.isDone : ''}>
-        <Checkbox checked={task.status === TaskStatuses.COMPLETED} onChange={onChangeStatus} size={"small"}/>
-        <EditableSpan title={task.title} changeTitleHandler={changeTaskTitleHandler}/>
-        <IconButton onClick={onRemoveHandler} color={"error"} style={{marginLeft: 'auto'}}>
+        <Checkbox checked={task.status === TaskStatuses.COMPLETED} onChange={onChangeStatus} size={"small"}
+                  disabled={isDisabled}/>
+        <EditableSpan title={task.title} changeTitleHandler={changeTaskTitleHandler} isDisabled={isDisabled}/>
+        <IconButton disabled={isDisabled} onClick={onRemoveHandler} color={"error"} style={{marginLeft: 'auto'}}>
             <DeleteIcon/>
         </IconButton>
     </li>

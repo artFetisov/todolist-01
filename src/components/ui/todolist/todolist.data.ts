@@ -18,7 +18,8 @@ export const tasks1: ITask[][] = [[
         deadline: '',
         todoListId: '',
         order: 0,
-        addedDate: ''
+        addedDate: '',
+        entityStatus: 'idle'
     },
     {
         id: v1(), title: 'TS', status: TaskStatuses.NEW, description: '',
@@ -27,7 +28,8 @@ export const tasks1: ITask[][] = [[
         deadline: '',
         todoListId: '',
         order: 0,
-        addedDate: ''
+        addedDate: '',
+        entityStatus: 'idle'
     },
     {
         id: v1(), title: 'NODEJS', status: TaskStatuses.NEW, description: '',
@@ -36,10 +38,12 @@ export const tasks1: ITask[][] = [[
         deadline: '',
         todoListId: '',
         order: 0,
-        addedDate: ''
+        addedDate: '',
+        entityStatus: 'idle'
     },
     {
         id: v1(), title: 'SCSS', status: TaskStatuses.NEW, description: '',
+        entityStatus: 'idle',
         priority: TaskPriorities.MIDDLE,
         startDate: '',
         deadline: '',
@@ -54,7 +58,8 @@ export const tasks1: ITask[][] = [[
         deadline: '',
         todoListId: '',
         order: 0,
-        addedDate: ''
+        addedDate: '',
+        entityStatus: 'idle'
     },
 ], [
     {
@@ -64,7 +69,8 @@ export const tasks1: ITask[][] = [[
         deadline: '',
         todoListId: '',
         order: 0,
-        addedDate: ''
+        addedDate: '',
+        entityStatus: 'idle'
     },
     {
         id: v1(), title: 'sugar', status: TaskStatuses.NEW, description: '',
@@ -73,7 +79,8 @@ export const tasks1: ITask[][] = [[
         deadline: '',
         todoListId: '',
         order: 0,
-        addedDate: ''
+        addedDate: '',
+        entityStatus: 'idle'
     },
     {
         id: v1(), title: 'bread', status: TaskStatuses.NEW, description: '',
@@ -82,7 +89,8 @@ export const tasks1: ITask[][] = [[
         deadline: '',
         todoListId: '',
         order: 0,
-        addedDate: ''
+        addedDate: '',
+        entityStatus: 'idle'
     },
 ]]
 

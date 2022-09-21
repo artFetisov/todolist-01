@@ -30,17 +30,19 @@ const initialGlobalState = {
                 deadline: '',
                 todoListId: '',
                 order: 0,
-                addedDate: ''
+                addedDate: '',
+                entityStatus: 'idle'
             },
             {
                 id: v1(), title: 'JS', status: TaskStatuses.NEW, description: '',
+                entityStatus: 'idle',
                 completed: false,
                 priority: TaskPriorities.MIDDLE,
                 startDate: '',
                 deadline: '',
                 todoListId: '',
                 order: 0,
-                addedDate: ''
+                addedDate: '',
             }
         ],
         ['todolistId2']: [
@@ -52,7 +54,8 @@ const initialGlobalState = {
                 deadline: '',
                 todoListId: '',
                 order: 0,
-                addedDate: ''
+                addedDate: '',
+                entityStatus: 'idle'
             },
             {
                 id: v1(), title: 'React Book', status: TaskStatuses.NEW, description: '',
@@ -62,7 +65,8 @@ const initialGlobalState = {
                 deadline: '',
                 todoListId: '',
                 order: 0,
-                addedDate: ''
+                addedDate: '',
+                entityStatus: 'idle',
             }
         ]
     },

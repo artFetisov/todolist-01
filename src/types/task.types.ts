@@ -1,3 +1,5 @@
+import {RequestStatusType} from "./app.types";
+
 export interface ITasks {
     [key: string]: ITask[]
 }
@@ -26,8 +28,7 @@ export enum TaskPriorities {
     LATER = 4
 }
 
-
-export interface ITask {
+export interface ITaskResponse {
     description: string
     title: string
     status: TaskStatuses
@@ -38,4 +39,8 @@ export interface ITask {
     todoListId: string
     order: number
     addedDate: string
+}
+
+export interface ITask extends ITaskResponse {
+    entityStatus: RequestStatusType
 }

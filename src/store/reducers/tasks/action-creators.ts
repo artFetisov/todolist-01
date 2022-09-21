@@ -1,6 +1,8 @@
 import {
-    AddTaskAction, ChangeTask,
+    AddTaskAction,
+    ChangeTask,
     RemoveTaskAction,
+    SetEntityStatusAction,
     SetTasksAction,
     TasksActionEnum,
 } from "./types";
@@ -10,6 +12,7 @@ import {AppRootState, AppRootThunk} from "../../index";
 import {AppActionCreators} from "../app/action-creators";
 import {TodoListsActionCreators} from "../todolists/action-creators";
 import {handleNetworkError} from "../../../utils/handleNetworkError";
+import {RequestStatusType} from "../../../types/app.types";
 
 export const TasksActionCreators = {
     removeTask: (todoListId: string, taskId: string): RemoveTaskAction => ({
@@ -30,6 +33,12 @@ export const TasksActionCreators = {
         type: TasksActionEnum.SET_TASKS,
         payload: {
             todoListId, tasks
+        }
+    }),
+    setEntityStatus: (todoListId: string, taskId: string, entityStatus: RequestStatusType): SetEntityStatusAction => ({
+        type: TasksActionEnum.SET_ENTITY_STATUS,
+        payload: {
+            taskId, todoListId, entityStatus
         }
     })
 }
@@ -56,7 +65,11 @@ export const TasksThunkCreators = {
             const response = await TasksService.create(todoListId, title)
 
             if (response.data.resultCode === 0) {
-                dispatch(TasksActionCreators.addTask(response.data.data.item))
+                const newTask: ITask = {
+                    ...response.data.data.item,
+                    entityStatus: 'idle'
+                }
+                dispatch(TasksActionCreators.addTask(newTask))
             } else {
                 const errMessages = response.data.messages
                 dispatch(AppActionCreators.setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
@@ -71,15 +84,16 @@ export const TasksThunkCreators = {
     },
     removeTask: (todoListId: string, taskId: string): AppRootThunk => async dispatch => {
         try {
+            dispatch(TasksActionCreators.setEntityStatus(todoListId, taskId, 'loading'))
             dispatch(AppActionCreators.setAppStatus('loading'))
             const response = await TasksService.delete(todoListId, taskId)
-
             if (response.data.resultCode === 0) {
                 dispatch(TasksActionCreators.removeTask(todoListId, taskId))
             } else {
                 const errMessages = response.data.messages
                 dispatch(AppActionCreators.setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
             }
+            dispatch(TasksActionCreators.setEntityStatus(todoListId, taskId, 'succeeded'))
             dispatch(AppActionCreators.setAppStatus('succeeded'))
         } catch (error) {
             if (error instanceof Error) {
@@ -90,6 +104,7 @@ export const TasksThunkCreators = {
     updateTask: (todoListId: string, taskId: string, newObj: { status: TaskStatuses } | { title: string }): AppRootThunk =>
         async (dispatch, getState: () => AppRootState) => {
             try {
+                dispatch(TasksActionCreators.setEntityStatus(todoListId, taskId, 'loading'))
                 dispatch(AppActionCreators.setAppStatus('loading'))
                 const task = getState().tasks[todoListId].find(t => t.id === taskId)
 
@@ -107,11 +122,12 @@ export const TasksThunkCreators = {
                 const response = await TasksService.update(todoListId, taskId, model)
 
                 if (response.data.resultCode === 0) {
-                    dispatch(TasksActionCreators.changeTask(response.data.data.item))
+                    dispatch(TasksActionCreators.changeTask({...response.data.data.item, entityStatus: 'idle'}))
                 } else {
                     const errMessages = response.data.messages
                     dispatch(AppActionCreators.setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
                 }
+                dispatch(TasksActionCreators.setEntityStatus(todoListId, taskId, 'succeeded'))
                 dispatch(AppActionCreators.setAppStatus('succeeded'))
             } catch (error) {
                 if (error instanceof Error) {
