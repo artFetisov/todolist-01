@@ -6,7 +6,7 @@ export const TodoListsService = {
         return instance.get<ITodoListFetch[]>('todo-lists')
     },
     async create(title: string) {
-        return instance.post<IResponse<ITodoListFetch>>('todo-lists', {title})
+        return instance.post<IResponse<{ item: ITodoListFetch }>>('todo-lists', {title})
     },
     async update<IResponse>(todoListId: string, title: string) {
         return instance.put(`todo-lists/${todoListId}`, {title})

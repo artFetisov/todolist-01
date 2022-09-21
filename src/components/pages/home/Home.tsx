@@ -22,8 +22,7 @@ export const Home: FC = () => {
         dispatch(TodoListsThunksCreators.createTodoList(title))
     }, [dispatch])
 
-    return <>
-        <NavBar/>
+    return <div>
         <div className={styles.progressWrapper}>
             {status === 'loading' && <LinearProgress/>}
         </div>
@@ -44,7 +43,7 @@ export const Home: FC = () => {
                     }
                 )}
             </Grid>
-            <CustomizedSnackBar/>
+
         </Container>
-    </>
+    </div>
 }

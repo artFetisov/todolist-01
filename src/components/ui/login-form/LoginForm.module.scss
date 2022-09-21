@@ -1,0 +1,17 @@
+.wrapper {
+  height: calc(100vh - 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  width: 350px;
+  border-radius: 8px;
+  padding: 30px 20px;
+}
+
+.input {
+  margin-top: 20px;
+}

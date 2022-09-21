@@ -2,7 +2,8 @@ import {AppActions, AppEnumAction, IAppState} from "./types";
 
 const initialState: IAppState = {
     error: null,
-    status: 'idle'
+    status: 'idle',
+    isInitialized: false
 }
 
 export default function appReducer(state = initialState, action: AppActions): IAppState {
@@ -17,6 +18,12 @@ export default function appReducer(state = initialState, action: AppActions): IA
             return {
                 ...state,
                 status: action.status
+            }
+
+        case AppEnumAction.SET_IS_INITIALIZED:
+            return {
+                ...state,
+                isInitialized: true
             }
 
         default:

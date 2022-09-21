@@ -68,7 +68,15 @@ const initialGlobalState = {
     },
     app: {
         error: null,
-        status: 'idle'
+        status: 'idle',
+        isInitialized: false
+    },
+    auth: {
+        id: null,
+        email: null,
+        login: null,
+        isAuth: false,
+        captchaUrl: null,
     }
 }
 
