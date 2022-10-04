@@ -1,6 +1,6 @@
 import React, {FC} from "react";
 import styles from './LoginForm.module.scss';
-import {Box, Button, Checkbox, FormControlLabel, FormGroup, TextField} from "@mui/material";
+import { Button, Checkbox, FormControlLabel,  TextField} from "@mui/material";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {IAuthData} from "../../../types/auth.types";
 import {validEmail} from "../../../utils/regex";
@@ -13,8 +13,9 @@ export const LoginForm: FC = () => {
 
     const onSubmit: SubmitHandler<IAuthData> = (data) => {
         const {email, password, rememberMe} = data
-        console.log(data)
         dispatch(AuthThunkCreators.login(email, password, rememberMe))
+
+        if (!errors) reset()
     }
 
     return <div className={styles.container}>
