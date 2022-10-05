@@ -4,13 +4,14 @@ import {AddItemForm} from "./AddItemForm";
 import {btnTitles} from "./todolist.data";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Card, Typography} from "@mui/material";
-import {TasksThunkCreators} from "../../../store/reducers/tasks/action-creators";
-import {TodoListsActionCreators, TodoListsThunksCreators} from "../../../store/reducers/todolists/action-creators";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import {FilterValuesType} from "../../../types/todo-list.types";
 import {ITask, TaskStatuses} from "../../../types/task.types";
 import {RequestStatusType} from "../../../types/app.types";
-import {useTypedDispatch} from "../../../hooks/useTypedDispatch";
+import {useAppDispatch} from "../../../hooks/useAppDispatch";
+import {changeTodoListFilter} from "../../../store/todolists/todolists.slice";
+import {TasksThunkCreators} from "../../../store/tasks/tasks.actions";
+import {TodoListsThunksCreators} from "../../../store/todolists/todolists.actions";
 
 interface ITodoListProps {
     todoListId: string
@@ -33,7 +34,7 @@ export const TodoList: FC<ITodoListProps> = React.memo((
         listStatus
     }
 ) => {
-    const dispatch = useTypedDispatch()
+    const dispatch = useAppDispatch()
     const tasks = useTypedSelector(state => state.tasks[todoListId])
     const isDisabled = listStatus === 'loading'
 
@@ -46,7 +47,7 @@ export const TodoList: FC<ITodoListProps> = React.memo((
     }, [todoListId, dispatch])
 
     function onSetFilter(e: MouseEvent<HTMLButtonElement>) {
-        dispatch(TodoListsActionCreators.changeTodoListFilter(todoListId, e.currentTarget.value as FilterValuesType))
+        dispatch(changeTodoListFilter({todoListId, newFilter: e.currentTarget.value as FilterValuesType}))
     }
 
     function onRemoveTodoList() {

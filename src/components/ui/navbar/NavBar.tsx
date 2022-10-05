@@ -1,13 +1,13 @@
 import React, {FC} from 'react'
 import {AppBar, Box, Button, Container, IconButton, Toolbar} from "@mui/material";
 import {Menu} from '@mui/icons-material';
-import {useTypedDispatch} from "../../../hooks/useTypedDispatch";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import styles from './NavBar.module.scss';
-import {AuthThunkCreators} from "../../../store/reducers/auth/action-creators";
+import {useAppDispatch} from "../../../hooks/useAppDispatch";
+import {AuthThunkCreators} from "../../../store/auth/auth.actions";
 
 export const NavBar: FC = () => {
-    const dispatch = useTypedDispatch()
+    const dispatch = useAppDispatch()
     const {isAuth} = useTypedSelector(state => state.auth)
 
     const handleLogout = () => {

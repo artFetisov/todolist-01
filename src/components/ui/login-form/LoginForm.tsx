@@ -1,14 +1,14 @@
 import React, {FC} from "react";
 import styles from './LoginForm.module.scss';
-import { Button, Checkbox, FormControlLabel,  TextField} from "@mui/material";
+import {Button, Checkbox, FormControlLabel, TextField} from "@mui/material";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {IAuthData} from "../../../types/auth.types";
 import {validEmail} from "../../../utils/regex";
-import {useTypedDispatch} from "../../../hooks/useTypedDispatch";
-import {AuthThunkCreators} from "../../../store/reducers/auth/action-creators";
+import {useAppDispatch} from "../../../hooks/useAppDispatch";
+import {AuthThunkCreators} from "../../../store/auth/auth.actions";
 
 export const LoginForm: FC = () => {
-    const dispatch = useTypedDispatch()
+    const dispatch = useAppDispatch()
     const {register, formState: {errors}, reset, handleSubmit} = useForm<IAuthData>()
 
     const onSubmit: SubmitHandler<IAuthData> = (data) => {

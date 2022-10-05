@@ -12,7 +12,7 @@ const appSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setAppError(state, action: PayloadAction<string>) {
+        setAppError(state, action: PayloadAction<string | null>) {
             state.error = action.payload
         },
         setAppStatus(state, action: PayloadAction<RequestStatusType>) {

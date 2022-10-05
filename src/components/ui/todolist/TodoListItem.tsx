@@ -3,9 +3,10 @@ import styles from './TodoList.module.css'
 import {EditableSpan} from "./EditableSpan";
 import {Checkbox, IconButton} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import {TasksThunkCreators} from "../../../store/reducers/tasks/action-creators";
 import {ITask, TaskStatuses} from "../../../types/task.types";
-import {useTypedDispatch} from "../../../hooks/useTypedDispatch";
+import {useAppDispatch} from "../../../hooks/useAppDispatch";
+import {TasksThunkCreators} from "../../../store/tasks/tasks.actions";
+
 
 interface ITaskProps {
     task: ITask
@@ -17,7 +18,7 @@ export const TodoListItem: FC<ITaskProps> = React.memo((
         task,
         todoListId,
     }) => {
-    const dispatch = useTypedDispatch()
+    const dispatch = useAppDispatch()
     const isDisabled = task.entityStatus === 'loading'
 
     function onRemoveHandler() {

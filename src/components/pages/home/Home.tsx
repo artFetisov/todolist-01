@@ -2,15 +2,13 @@ import React, {FC, useCallback, useEffect} from "react";
 import {TodoList} from "../../ui/todolist/TodoList";
 import {AddItemForm} from "../../ui/todolist/AddItemForm";
 import {Container, Grid, LinearProgress} from "@mui/material";
-import {TodoListsThunksCreators} from "../../../store/reducers/todolists/action-creators";
-import {NavBar} from "../../ui/navbar/NavBar";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
-import {CustomizedSnackBar} from "../../ui/snack-bar/SnackBar";
 import styles from '../../../App.module.scss';
-import {useTypedDispatch} from "../../../hooks/useTypedDispatch";
+import {useAppDispatch} from "../../../hooks/useAppDispatch";
+import {TodoListsThunksCreators} from "../../../store/todolists/todolists.actions";
 
 export const Home: FC = () => {
-    const dispatch = useTypedDispatch()
+    const dispatch = useAppDispatch()
     const status = useTypedSelector(state => state.app.status)
     const todoLists = useTypedSelector(state => state.todoLists)
 
@@ -43,7 +41,6 @@ export const Home: FC = () => {
                     }
                 )}
             </Grid>
-
         </Container>
     </div>
 }

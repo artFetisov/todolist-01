@@ -11,7 +11,7 @@ const todoListsSlice = createSlice({
     initialState,
     reducers: {
         removeTodoList(state, action: PayloadAction<{ todoListId: string }>) {
-            return state.filter(tl => tl.id === action.payload.todoListId)
+            return state.filter(tl => tl.id !== action.payload.todoListId)
         },
         addTodoList(state, action: PayloadAction<{ newTodoList: ITodoListFetch }>) {
             state.unshift({...action.payload.newTodoList, filter: 'all', listStatus: 'idle'})
@@ -41,7 +41,8 @@ const todoListsSlice = createSlice({
                 todoList.listStatus = action.payload.status
             }
         }
-    }
+    },
+
 })
 
 export const {
@@ -52,5 +53,7 @@ export const {
     setTodoLists,
     setListStatus
 } = todoListsSlice.actions
+
+console.log(todoListsSlice.name)
 
 export const {reducer} = todoListsSlice
