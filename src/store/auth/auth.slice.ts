@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IAuthState} from "./auth.types";
+import {authMeTC, logoutTC} from "./auth.actions";
 
 const initialState: IAuthState = {
     id: null,
@@ -12,18 +13,24 @@ const initialState: IAuthState = {
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {
-        setUserData(state, action: PayloadAction<{ id: number | null, email: string | null, login: string | null, isAuth: true | false }>) {
-            const {id, isAuth, email, login} = action.payload
-            state.isAuth = isAuth
-            state.id = id
-            state.login = login
-            state.email = email
-        }
-    },
-
+    reducers: {},
+    extraReducers: builder => {
+        builder.addCase(authMeTC.fulfilled, (state, action) => {
+            if (action.payload) {
+                const {id, email, login} = action.payload
+                state.isAuth = true
+                state.id = id
+                state.login = login
+                state.email = email
+            }
+        })
+        builder.addCase(logoutTC.fulfilled, (state) => {
+            state.isAuth = false
+            state.id = null
+            state.login = null
+            state.email = null
+        })
+    }
 })
-
-export const {setUserData} = authSlice.actions
 
 export const {reducer} = authSlice

@@ -5,15 +5,14 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {IAuthData} from "../../../types/auth.types";
 import {validEmail} from "../../../utils/regex";
 import {useAppDispatch} from "../../../hooks/useAppDispatch";
-import {AuthThunkCreators} from "../../../store/auth/auth.actions";
+import {loginTC} from "../../../store/auth/auth.actions";
 
 export const LoginForm: FC = () => {
     const dispatch = useAppDispatch()
     const {register, formState: {errors}, reset, handleSubmit} = useForm<IAuthData>()
 
     const onSubmit: SubmitHandler<IAuthData> = (data) => {
-        const {email, password, rememberMe} = data
-        dispatch(AuthThunkCreators.login(email, password, rememberMe))
+        dispatch(loginTC(data))
 
         if (!errors) reset()
     }

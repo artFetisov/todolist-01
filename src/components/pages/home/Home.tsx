@@ -5,7 +5,7 @@ import {Container, Grid, LinearProgress} from "@mui/material";
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import styles from '../../../App.module.scss';
 import {useAppDispatch} from "../../../hooks/useAppDispatch";
-import {TodoListsThunksCreators} from "../../../store/todolists/todolists.actions";
+import {createTodoListTC, fetchTodoListsTC} from "../../../store/todolists/todolists.actions";
 
 export const Home: FC = () => {
     const dispatch = useAppDispatch()
@@ -13,11 +13,11 @@ export const Home: FC = () => {
     const todoLists = useTypedSelector(state => state.todoLists)
 
     useEffect(() => {
-        dispatch(TodoListsThunksCreators.fetchTodoLists())
+        dispatch(fetchTodoListsTC())
     }, [])
 
     const addTodoList = useCallback((title: string) => {
-        dispatch(TodoListsThunksCreators.createTodoList(title))
+        dispatch(createTodoListTC(title))
     }, [dispatch])
 
     return <div>

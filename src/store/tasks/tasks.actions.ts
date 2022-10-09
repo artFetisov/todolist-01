@@ -1,31 +1,37 @@
-import {Dispatch} from "redux";
 import {setAppError, setAppStatus} from "../app/app.slice";
 import {TasksService} from "../../services/tasks.service";
-import {addTask, changeTask, removeTask, setEntityStatus, setTasks} from "./tasks.slice";
+import {setEntityStatus} from "./tasks.slice";
 import {handleNetworkError} from "../../utils/handleNetworkError";
 import {setListStatus} from "../todolists/todolists.slice";
-import {ITask, IUpdateTaskModel, TaskStatuses} from "../../types/task.types";
+import {ITask, IUpdateTaskData, IUpdateTaskModel} from "../../types/task.types";
 import {AppRootState} from "../index";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 
-export const TasksThunkCreators = {
-    fetchTasks: (todoListId: string) => async (dispatch: Dispatch) => {
+export const fetchTasksTC = createAsyncThunk<{ todoListId: string, tasks: ITask[] } | undefined, { todoListId: string }>('tasks/fetch',
+    async ({todoListId}, {dispatch, rejectWithValue}) => {
+        dispatch(setAppStatus('loading'))
         try {
-            dispatch(setAppStatus('loading'))
             const response = await TasksService.getAll(todoListId)
             if (response.data.error === null) {
-                dispatch(setTasks({todoListId, tasks: response.data.items}))
                 dispatch(setAppStatus('succeeded'))
+                return {todoListId, tasks: response.data.items}
+            } else {
+                dispatch(setAppStatus('failed'))
+                dispatch(setAppError(response.data.error))
             }
         } catch (error) {
             if (error instanceof Error) {
                 handleNetworkError(error.message, dispatch, todoListId)
+                return rejectWithValue(error.message)
             }
         }
-    },
-    createTask: (todoListId: string, title: string) => async (dispatch: Dispatch) => {
+    })
+
+export const createTaskTC = createAsyncThunk<ITask | undefined, { todoListId: string, title: string }>('tasks/create',
+    async ({todoListId, title}, {dispatch, rejectWithValue}) => {
+        dispatch(setListStatus({todoListId, status: 'loading'}))
+        dispatch(setAppStatus('loading'))
         try {
-            dispatch(setListStatus({todoListId, status: 'loading'}))
-            dispatch(setAppStatus('loading'))
             const response = await TasksService.create(todoListId, title)
 
             if (response.data.resultCode === 0) {
@@ -33,70 +39,82 @@ export const TasksThunkCreators = {
                     ...response.data.data.item,
                     entityStatus: 'idle'
                 }
-                dispatch(addTask(newTask))
+                dispatch(setAppStatus('succeeded'))
+                dispatch(setListStatus({todoListId, status: 'succeeded'}))
+                return newTask
             } else {
                 const errMessages = response.data.messages
+                dispatch(setAppStatus('failed'))
+                dispatch(setListStatus({todoListId, status: 'failed'}))
                 dispatch(setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
             }
-            dispatch(setAppStatus('succeeded'))
-            dispatch(setListStatus({todoListId, status: 'succeeded'}))
         } catch (error) {
             if (error instanceof Error) {
                 handleNetworkError(error.message, dispatch, todoListId)
+                return rejectWithValue(error.message)
             }
         }
-    },
-    removeTask: (todoListId: string, taskId: string) => async (dispatch: Dispatch) => {
+    })
+
+export const removeTaskTC = createAsyncThunk<{ todoListId: string, taskId: string } | undefined, { todoListId: string, taskId: string }>('tasks/remove',
+    async ({todoListId, taskId}, {dispatch, rejectWithValue}) => {
+        dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'loading'}))
+        dispatch(setAppStatus('loading'))
         try {
-            dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'loading'}))
-            dispatch(setAppStatus('loading'))
             const response = await TasksService.delete(todoListId, taskId)
             if (response.data.resultCode === 0) {
-                dispatch(removeTask({todoListId, taskId}))
+                dispatch(setAppStatus('succeeded'))
+                dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'succeeded'}))
+                return {todoListId, taskId}
             } else {
                 const errMessages = response.data.messages
+                dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'failed'}))
+                dispatch(setAppStatus('failed'))
                 dispatch(setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
             }
-            dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'succeeded'}))
-            dispatch(setAppStatus('succeeded'))
         } catch (error) {
             if (error instanceof Error) {
                 handleNetworkError(error.message, dispatch, todoListId)
+                return rejectWithValue(error.message)
             }
         }
-    },
-    updateTask: (todoListId: string, taskId: string, newObj: { status: TaskStatuses } | { title: string }) =>
-        async (dispatch: Dispatch, getState: () => AppRootState) => {
-            try {
-                dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'loading'}))
-                dispatch(setAppStatus('loading'))
-                const task = getState().tasks[todoListId].find(t => t.id === taskId)
+    })
 
-                if (!task) return
 
-                const model: IUpdateTaskModel = {
-                    description: task.description,
-                    priority: task.priority,
-                    startDate: task.startDate,
-                    deadline: task.deadline,
-                    title: task.title,
-                    status: task.status,
-                    ...newObj
-                }
-                const response = await TasksService.update(todoListId, taskId, model)
+export const updateTaskTC = createAsyncThunk<ITask | undefined, IUpdateTaskData, { state: AppRootState }>('tasks/update',
+    async ({todoListId, taskId, newObj}, {dispatch, rejectWithValue, getState}) => {
+        dispatch(setAppStatus('loading'))
+        dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'loading'}))
+        try {
+            const task = getState().tasks[todoListId].find(t => t.id === taskId)
 
-                if (response.data.resultCode === 0) {
-                    dispatch(changeTask({...response.data.data.item, entityStatus: 'idle'}))
-                } else {
-                    const errMessages = response.data.messages
-                    dispatch(setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
-                }
-                dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'succeeded'}))
+            if (!task) return
+
+            const model: IUpdateTaskModel = {
+                description: task.description,
+                priority: task.priority,
+                startDate: task.startDate,
+                deadline: task.deadline,
+                title: task.title,
+                status: task.status,
+                ...newObj
+            }
+            const response = await TasksService.update(todoListId, taskId, model)
+
+            if (response.data.resultCode === 0) {
                 dispatch(setAppStatus('succeeded'))
-            } catch (error) {
-                if (error instanceof Error) {
-                    handleNetworkError(error.message, dispatch, todoListId)
-                }
+                dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'succeeded'}))
+                return {...response.data.data.item, entityStatus: 'idle'}
+            } else {
+                const errMessages = response.data.messages
+                dispatch(setEntityStatus({todoListId, taskId, entityStatus: 'failed'}))
+                dispatch(setAppStatus('failed'))
+                dispatch(setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                handleNetworkError(error.message, dispatch, todoListId)
+                return rejectWithValue(error.message)
             }
         }
-}
+    })

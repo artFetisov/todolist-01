@@ -1,23 +1,27 @@
-import {Dispatch} from "redux";
 import {setAppError, setAppStatus} from "../app/app.slice";
 import {TodoListsService} from "../../services/todo-lists.service";
 import {addTodoList, changeTodoListTitle, removeTodoList, setListStatus, setTodoLists} from "./todolists.slice";
 import {handleNetworkError} from "../../utils/handleNetworkError";
+import {createAsyncThunk} from "@reduxjs/toolkit";
 
-export const TodoListsThunksCreators = {
-    fetchTodoLists: () => async (dispatch: Dispatch) => {
-        try {
-            dispatch(setAppStatus('loading'))
-            const response = await TodoListsService.getAll()
-            dispatch(setTodoLists({todoLists: response.data}))
-            dispatch(setAppStatus('succeeded'))
-        } catch (error) {
-            if (error instanceof Error) {
-                handleNetworkError(error.message, dispatch)
-            }
+export const fetchTodoListsTC = createAsyncThunk('todoList/getAll', async (_, {dispatch, rejectWithValue}) => {
+    try {
+        dispatch(setAppStatus('loading'))
+        const response = await TodoListsService.getAll()
+        dispatch(setTodoLists({todoLists: response.data}))
+        dispatch(setAppStatus('succeeded'))
+    } catch (error) {
+        if (error instanceof Error) {
+            handleNetworkError(error.message, dispatch)
+            return rejectWithValue(error.message)
         }
-    },
-    removeTodoList: (todoListId: string) => async (dispatch: Dispatch) => {
+    }
+})
+
+export const removeTodoListTC = createAsyncThunk('todoList/remove', async (todoListId: string, {
+        dispatch,
+        rejectWithValue
+    }) => {
         try {
             dispatch(setListStatus({todoListId, status: 'loading'}))
             dispatch(setAppStatus('loading'))
@@ -32,28 +36,37 @@ export const TodoListsThunksCreators = {
         } catch (error) {
             if (error instanceof Error) {
                 handleNetworkError(error.message, dispatch, todoListId)
+                return rejectWithValue(error.message)
             }
         }
-    },
-    createTodoList: (title: string) => async (dispatch: Dispatch) => {
-        try {
-            dispatch(setAppStatus('loading'))
-            const response = await TodoListsService.create(title)
+    }
+)
 
-            if (response.data.resultCode === 0) {
-                dispatch(addTodoList({newTodoList: response.data.data.item}))
-            } else {
-                const errMessages = response.data.messages
-                dispatch(setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
-            }
-            dispatch(setAppStatus('succeeded'))
-        } catch (error) {
-            if (error instanceof Error) {
-                handleNetworkError(error.message, dispatch)
-            }
+export const createTodoListTC = createAsyncThunk('todoList/create', async (title: string, {
+    dispatch,
+    rejectWithValue
+}) => {
+    try {
+        dispatch(setAppStatus('loading'))
+        const response = await TodoListsService.create(title)
+
+        if (response.data.resultCode === 0) {
+            dispatch(addTodoList({newTodoList: response.data.data.item}))
+        } else {
+            const errMessages = response.data.messages
+            dispatch(setAppError(errMessages.length > 0 ? errMessages[0] : 'Some error occurred'))
         }
-    },
-    changeTitleTodoList: (todoListId: string, title: string) => async (dispatch: Dispatch) => {
+        dispatch(setAppStatus('succeeded'))
+    } catch (error) {
+        if (error instanceof Error) {
+            handleNetworkError(error.message, dispatch)
+            return rejectWithValue(error.message)
+        }
+    }
+})
+
+export const changeTodoListTC = createAsyncThunk<void, { todoListId: string, title: string }>('todoList/change',
+    async ({todoListId, title}, {dispatch, rejectWithValue}) => {
         try {
             dispatch(setListStatus({todoListId, status: 'loading'}))
             dispatch(setAppStatus('loading'))
@@ -70,7 +83,7 @@ export const TodoListsThunksCreators = {
         } catch (error) {
             if (error instanceof Error) {
                 handleNetworkError(error.message, dispatch, todoListId)
+                return rejectWithValue(error.message)
             }
         }
-    }
-}
+    })

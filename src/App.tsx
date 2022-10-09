@@ -5,15 +5,15 @@ import {Spinner} from "./components/ui/spinner/Spinner";
 import {Grid} from "@mui/material";
 import {Router} from './router/Router';
 import {Layout} from "./components/layout/Layout";
-import {AppThunkCreators} from "./store/app/app.actions";
 import {useAppDispatch} from "./hooks/useAppDispatch";
+import {initializeAppTC} from "./store/app/app.actions";
 
 export const App: FC = () => {
     const dispatch = useAppDispatch()
     const isInitialized = useTypedSelector(state => state.app.isInitialized)
 
     useEffect(() => {
-        dispatch(AppThunkCreators.initializedApp())
+        dispatch(initializeAppTC())
     }, [])
 
     return <>{isInitialized

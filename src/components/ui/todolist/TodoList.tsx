@@ -10,8 +10,8 @@ import {ITask, TaskStatuses} from "../../../types/task.types";
 import {RequestStatusType} from "../../../types/app.types";
 import {useAppDispatch} from "../../../hooks/useAppDispatch";
 import {changeTodoListFilter} from "../../../store/todolists/todolists.slice";
-import {TasksThunkCreators} from "../../../store/tasks/tasks.actions";
-import {TodoListsThunksCreators} from "../../../store/todolists/todolists.actions";
+import {changeTodoListTC, removeTodoListTC} from "../../../store/todolists/todolists.actions";
+import {createTaskTC, fetchTasksTC} from "../../../store/tasks/tasks.actions";
 
 interface ITodoListProps {
     todoListId: string
@@ -39,11 +39,11 @@ export const TodoList: FC<ITodoListProps> = React.memo((
     const isDisabled = listStatus === 'loading'
 
     useEffect(() => {
-        dispatch(TasksThunkCreators.fetchTasks(todoListId))
+        dispatch(fetchTasksTC({todoListId}))
     }, [])
 
     const addItem = useCallback((title: string) => {
-        dispatch(TasksThunkCreators.createTask(todoListId, title))
+        dispatch(createTaskTC({todoListId, title}))
     }, [todoListId, dispatch])
 
     function onSetFilter(e: MouseEvent<HTMLButtonElement>) {
@@ -51,11 +51,11 @@ export const TodoList: FC<ITodoListProps> = React.memo((
     }
 
     function onRemoveTodoList() {
-        dispatch(TodoListsThunksCreators.removeTodoList(todoListId))
+        dispatch(removeTodoListTC(todoListId))
     }
 
     const changeListTitleHandler = useCallback((title: string) => {
-        dispatch(TodoListsThunksCreators.changeTitleTodoList(todoListId, title))
+        dispatch(changeTodoListTC({todoListId, title}))
     }, [todoListId, dispatch])
 
     const filteredTasks = useMemo(() => filteredTasksHandler(tasks, filter), [filter, tasks])

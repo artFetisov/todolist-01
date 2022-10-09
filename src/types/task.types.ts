@@ -44,3 +44,9 @@ export interface ITaskResponse {
 export interface ITask extends ITaskResponse {
     entityStatus: RequestStatusType
 }
+
+export interface IUpdateTaskData {
+    todoListId: string
+    taskId: string
+    newObj: { status: TaskStatuses } | { title: string }
+}

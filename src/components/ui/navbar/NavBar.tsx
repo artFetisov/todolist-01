@@ -4,14 +4,14 @@ import {Menu} from '@mui/icons-material';
 import {useTypedSelector} from "../../../hooks/useTypedSelector";
 import styles from './NavBar.module.scss';
 import {useAppDispatch} from "../../../hooks/useAppDispatch";
-import {AuthThunkCreators} from "../../../store/auth/auth.actions";
+import {logoutTC} from "../../../store/auth/auth.actions";
 
 export const NavBar: FC = () => {
     const dispatch = useAppDispatch()
     const {isAuth} = useTypedSelector(state => state.auth)
 
     const handleLogout = () => {
-        dispatch(AuthThunkCreators.logout())
+        dispatch(logoutTC())
     }
 
     return <Box sx={{flexGrow: 1}}>
